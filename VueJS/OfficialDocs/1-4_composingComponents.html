@@ -1,0 +1,64 @@
+<!-- Composing Components:
+	Vue.js has a component system to help build large scale applications composed
+	of small, self-contained, and resubable components.
+ -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lesson 1</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+
+<!-- CONTENT AREA -->
+
+<!-- Ommitted simple example -->
+<div id="app-ommited">
+	<ol>
+		<!-- Create an instance of the todo-item component declared below -->
+		<todo-item></todo-item>
+	</ol>
+</div>
+<!-- Ommitted simple example END -->
+
+<div id="app">
+	<ol>
+		<!-- Create an instance of the todo-item component declared below -->
+		<todo-item v-for="item in groceryList" v-bind:todo="item"></todo-item>
+	</ol>
+</div>
+
+<!-- END CONTENT AREA -->
+
+<script>
+// First we define the component here, then compose it in another component's template. THis example will be ommitted because its too simple. But the idea is there
+/*
+Vue.component('todo-item', {
+	template: '<li>This is a todo</li>'
+})*/ 
+
+// More intereesting first example
+Vue.component('todo-item', {
+	// the todo-item component now accepts a "prop", this prop will be called todo
+	props: ['todo'],
+	template: '<li>{{ todo.text }}</li>'
+})
+
+var app = new Vue({
+	el: '#app',
+	data: {
+		groceryList: [
+			{ text: 'Vegatables' },
+			{ text: 'Cheese' },
+			{ text: 'Whatever else' },
+		]
+	}
+})
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!-- This is the handlebars template...I think I know what I need to make JamStream better -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Handlebars example</title>
+	</head>
+	<body>
+		<h1>Handlebars</h1>
+		<ul>
+			{{#each users as |user|}}
+			<li><a href="/{{user.username}}">{{user.name.full}}</a></li>
+			{{/each}}
+		</ul>
+	</body>
+</html>

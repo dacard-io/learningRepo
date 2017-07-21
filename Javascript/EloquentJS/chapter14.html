@@ -1,0 +1,351 @@
+<!--
+	My god I have been waiting for this for awhile. Next up is the basics of building a shitty platformer, then drawing on canvas.
+	We can make shitty little games afterwards!
+
+	This section covers events!
+-->
+<html>
+	<head>
+		<title>Chapter 14 - Handling Events</title>
+	</head>
+	<body oncontextmenu="return false;"> <!-- When making apps, you can disable the right-click menu by disabling oncontextmenu :o -->
+		<!-- Now lets go over Events and DOM nodes -->
+		<p>Click this document to activate the handler.</p>
+			<script>
+				// Create an event listener to listen to any click, and perform the function which outputs a message
+				addEventListener("click", function() {
+					console.log("You clicked!");
+				});
+			</script>
+
+		<button>Click me</button>
+		<p>No handler here.</p>
+			<script>
+			/* The addEventListener event shown above doesn't have any object attached to it, so it runs globally!!! Adding
+			an object binds that event to that object!
+			*/
+				var button = document.querySelector("button");
+				// Notice how addEventListener is binded to button
+				button.addEventListener("click", function() {
+					console.log("Button clicked.");
+				});
+			</script>
+
+		<button class="act-once">Act-once button</button>
+			<script>
+				// Lets create a button that can only be clicked once by removing the eventListener once it is run one time
+				var act_once = document.querySelector(".act-once");
+				function once() {
+					console.log("Done. You cannot run the event again!"); // Output a message
+					act_once.removeEventListener("click", once); // Remove event listener
+				}
+				act_once.addEventListener("click", once);
+				/* You can actually add onclick to the HTML directly (you've done it before) but it would only add one event listener, with addEventListener, we can
+				add many times of different event listeners that listen to multiple different events! */
+			</script>
+
+		<!-- Now lets go over event objects -->
+		<button class="click-me">Click me any way you want</button>
+			<script>
+				/* We have been ignoring it for the last couple of sections, but event handlers are passed an argument... the event object. It gives us
+				additional information about the event.  Like for example, which mouse button was pressed */
+				var click_me = document.querySelector(".click-me");
+				click_me.addEventListener("mousedown", function(event) { // Use an anonymous function, and the argument passed is the event object
+					if (event.which == 1) // Use which to ask which button was pressed from the event argument
+						console.log("Left Button");
+					else if (event.which == 2)
+						console.log("Middle Button");
+					else if (event.which == 3)
+						console.log("Right Button");
+				}); // Haha so I saw this example before when I was trying to learn Javascript years ago, and now that I'm looking at it, I actually completely understand it
+			</script>
+
+		<!-- Now lets cover propagation -->
+		<p class="prop-para"> A paragraph with a <button class="prop-button">button</button>.</p>
+			<script>
+				/* Now as you noticed, you have a slight problem in your program. When you have an event listener binded to an object, the event will fire, then will
+				propagate to the global event and that will fire as well. This may cause unintended behavior so we want to fire just one event listener, not the global
+				one, and the event listener in the container object */
+				var prop_button = document.querySelector(".prop-button");
+				var prop_para = document.querySelector(".prop-para");
+				prop_para.addEventListener("mousedown", function() {
+					console.log("Handler for paragraph");
+				});
+				prop_button.addEventListener("mousedown", function(event) {
+					console.log("Handler for button");
+					if (event.which == 3) // Check for a right click
+						event.stopPropagation(); // Did you see that shit!? it stopped the global event listener, and the paragraph event listener
+				});
+			</script>
+
+		<button>A</button>
+		<button>B</button>
+		<button>C</button>
+			<script>
+				/* You can also use the target property that referes to the node where the event handler originated from. You can use it to ensure that you're not
+				accidently handing something that propagated up from a node you did not want to handle! And you can use target to cast a wide net for a specific type of
+				event */
+				document.body.addEventListener("click", function(event) {
+					if (event.target.nodeName == "BUTTON")
+						console.log("Clicked", event.target.textContent); // Output would be -> Clicked A/B/C , definitely look at target properties later!
+						// So you can do like a "If A button clicked, perform action"
+				});
+			</script>
+
+		<!-- Now lets cover default actions -->
+		<a href="https://developer.mozilla.org/">MDN</a>
+			<script>
+				var link = document.querySelector("a");
+				link.addEventListener("click", function(event) {
+					console.log("Nope.");
+					event.preventDefault(); // Prevent the default action from taking place. See how it stops the link from functioning
+				});
+
+				/* Preventing a default action is not recommended, but some uses can be to implement your own keyboard shortcuts or context menu. But depending
+				on the browser, some default actions cannot be intercepted, such as the Ctrl-W key to close the tab. */
+			</script>
+
+		<!-- Key events [*heavy breathing intensifies] -->
+		<p>This page turns violet when you hold the V key.</p>
+		<p>Press Ctrl-Space to continue</p>
+		<p>Focus this page and type something</p>
+			<script>
+				/* When a key on the keyboard is pressed, your browser fires a "keydown" event. When it is released, a "keyup" event fires */
+				// Add global event listeners - look at this shit its so simple to understand
+				addEventListener("keydown", function(event) { // Wait for a key down event
+					if (event.keyCode == 86) // if event.keyCode is equal to 86 (which is V)
+						document.body.style.background = "Violet"; // Turn the body of the document's background color purple
+				});
+				addEventListener("keyup", function(event) { // Wait for a key up event
+					if (event.keyCode == 86) // Wait for event.keyCode to equal 86 (which is V)
+						document.body.style.background = ""; // Set body background color to equal nothing (which is the default, white)
+				})
+
+				// Sometimes character codes aren't so obvious, so you can use charCodeAt method to see what the character code would be
+				console.log("Violet".charCodeAt(0)); // Should output what the character code for V is -> 86
+				console.log("1".charCodeAt(0)); // Should output what the character code for 1 is -> 49
+
+				// How about a shortcut? Ctrl-Space heyooooo
+				addEventListener("keydown", function(event) {
+					if (event.keyCode == 32 && event.ctrlKey) // For special keys, you can use shiftKey, ctrlKey, altKey, and metaKey
+						console.log("Continuing!");
+				});
+
+				// Lets allow reading of character codes from the keyboard! keypress is a different event that fires right after keydown and then repeated when held down
+				addEventListener("keypress", function(event) {
+					console.log(String.fromCharCode(event.charCode));
+				});
+			</script>
+
+		<!-- Now lets cover mouse clicks - Lets create a small dot drawing program -->
+		<style>
+			.dot {
+				height: 8px; width: 8px;
+				border-radius: 4px; /* rounds corners */
+				background: blue;
+				position: absolute;
+			}
+		</style>
+		<script>
+			/* You can use several mouse events: click, mouseup, mousedown, and even dblclick for double-clicks! */
+			// Add a global event listener
+			addEventListener("click", function(event) {
+				var dot = document.createElement("div");
+				dot.className = "dot"; // Manually set the class name to the div created
+				dot.style.left = (event.pageX - 4) + "px"; // Set the left position to where the event occured on the pageX, -4 because the object is 8px, so its centered
+				dot.style.top = (event.pageY - 4) + "px"; // Set the top position to where the event occured on the pageY, -4 because the object is 8px, so its centered
+				document.body.appendChild(dot); // Add the dot to the body!
+			}) /* You could use clientX and clientY, but these are only relative to what is being currently viewed. pageX/pageY covers the entire document */
+		</script>
+
+		<!-- Now lets cover mouse motions -->
+		<p>Drag the bar to change its width: </p>
+		<div class="orange-bar" style="background: orange; width: 60px; height: 20px"></div>
+		<p class="hover-para">Hover over this <strong>paragraph</strong>.</p>
+			<script>
+				/* Everytime the mouse moves, a "mousemove" event fires. It can be used to track the position of the mouse */
+				var lastX; // Tracks the last observed X position (since we're changing the width of the div, who cares about the Y position)
+				var rect = document.querySelector(".orange-bar");
+				rect.addEventListener("mousedown", function(event) { // bind rect to a mousedown event listener
+					if (event.which == 1) { // If mouse press is left click (1), perform condition
+						lastX = event.pageX; // Set lastX to the position of where the event occured on the pageX axis!
+						addEventListener("mousemove", moved); // Add event listener when the mouse moves, and the function to execute would be moved()
+						event.preventDefault(); // Prevent selection
+					}
+				});
+
+				function buttonPressed(event) { // the buttonPressed function is used for browser compatibility. If buttons does not work, it falls back to buttons
+					if (event.buttons == null) 
+						return event.which != 0; // If which fails, try buttons
+					else
+						return event.buttons != 0;
+				}
+				function moved(event) {
+					if (!buttonPressed(event)) { // When no button is pressed, perform action
+						removeEventListener("mousemove", moved); // When the mouse is released, remove the event listener
+					} else {
+						var dist = event.pageX - lastX; // Sey dist variable to equal the position of where the event took place on the pageX axis
+						var newWidth = Math.max(10, rect.offsetWidth + dist); // Set newWidth to equal a new size. Formula is unusual, but hey it works
+						rect.style.width = newWidth + "px"; // Set divs new width to equal newWidth, and append px at the end so it isn't em units
+						lastX = event.pageX; // Set lastX to equal the position of where the event took place on the pageX axis
+					}
+				}
+
+				/* There are some more mouse motion events. Whenever a mouse pointer enters or leaves a node, a "mouseover" or "mouseout" fires. You can use these
+				for fade and hover effects. Unfortunately things aren't that simple -_- [come on...] You can't just mouseover then mouseout the effect, because when the
+				mouse moves from one node to its children, "mouseout" fires on the parent node, though the mouse did not actually leave the node's parent. To make
+				matters worse, these events propagate like other events, and so you will recieve "mouseout" events when the mouse leaves one of the child nodes of the
+				node which the handler is registered to. To deal with this, we will use the relatedTarget property of the event objects created for these events. It tells
+				us, in the case of "mouseover", what element the pointer was over before and, in the case of "mouseout", what element it is going to. We want to change our
+				hover effect only when the relatedTarget is outside of our target node. */
+				var hover_para = document.querySelector(".hover-para");
+				function isInside(node, target) { // Hey I might be able to use this for collisions...
+					for (; node != null; node = node.parentNode) // Don't really understand this for loop...
+						if (node == target) return true; // If node equals target, the node is inside the target, and return true
+					// isInside function follows the given node's parent links until it either reaches the top of the document, or finds the parent we are looking for
+				}
+				hover_para.addEventListener("mouseover", function(event) {
+					if (!isInside(event.relatedTarget, hover_para))
+						hover_para.style.color = "red";
+				});
+				hover_para.addEventListener("mouseout", function(event) {
+					if (!isInside(event.relatedTarget, hover_para))
+						hover_para.style.color = " ";
+				});
+				// [Uh oh starting to lose my grip] it doesn't seem to work on hover off. I'll look up a better way to do this later. Its overly complex I feel
+			</script>
+
+		<!-- Now lets go over scroll events -->
+		<style>
+			.progress {
+				border: 1px solid blue;
+				width: 100px;
+				position: fixed;
+				top: 10px; right: 10px;
+			}
+			.progress > div {
+				height: 12px;
+				background: blue;
+				width: 0%;
+			}
+			body {
+				height: 2000px;
+			}
+		</style>
+		<div class="progress"><div></div></div>
+			<script>
+				/* This is actually pretty simple! Anytime an element is scrolled, a "scroll" event is fired. This has various uses, such as knowing what the user
+				is currently looking at, or showing some indication of progress. The following example draws a progress bar in the top right corner, and updates it
+				to fill up as you scroll down! */
+				var bar = document.querySelector(".progress div");
+				// Add global event listener
+				addEventListener("scroll", function() { // Pretty simple, add an eventListener to any scrolling
+					var max = document.body.scrollHeight - innerHeight; // Set max to equal body scrollHeight - innerHeight(height of window) so you can't keep scrolling
+					var percent = (pageYOffset / max) * 100; // Set percent to equal the scroll position on the Y axis divided by max and multiplying by 100
+					bar.style.width = percent + "%"; // Set the width. Remember to append whatever unit your using so it doesn't use em by default.
+				})
+			</script>
+
+		<!-- Now lets go over focus events -->
+		<p>Name: <input type="text" data-help="Your full name"></p>
+		<p>Age: <input type="text" data-help="Your age"></p>
+		<p id="help"></p>
+			<script>
+				/* When an element gains focus, the browser fires a "focus" event on it. When it loses focus, a "blur" event fires. Unlike other events, these events
+				do not propagate, a handler on a parent element is not notified when a child element gains or loses focus. The following example displays a help text
+				for the text field that currently has focus: */
+				var help = document.querySelector("#help"); // Bind #help element to help
+				var fields = document.querySelectorAll("input"); // Bind all input fields to fields
+				for (var i = 0; i < fields.length; i++) { // Use a for loop to add event handlers to all input objects
+					fields[i].addEventListener("focus", function(event) { // for fields[i], add a focus event handler, and perform a function on focus
+						var text = event.target.getAttribute("data-help"); // Set text to equal the data-help attribute value
+						help.textContent = text; // Set the text inside #help using the textContent property to the value of text
+					});
+					fields[i].addEventListener("blur", function(event) { // Add another event listener for bluring
+						help.textContent = ""; // Set help to have no text when blured
+					});
+				}
+			</script>
+
+		<!-- Now lets go over load events -->
+		<!-- We don't actually have to go over any code for this one. When a page finishes loading, the "load" event fires on the window and the document body objects.
+		Remember that <script> tags run immediately when encountered. Sometimes this is too soon so using this can help. Elements such as images and script tags that
+		load external files also have a "load" event that indicates if a resource was located. Like focus events, load events do not propagate. When a page is closed or
+		navigated away from (like clicking on a link to leave the site) a "beforeunload" event fires. The main use of this event is to prevent the user from accidently
+		losing work by closing a document. -->
+
+		<!-- Now lets cover the script execution timeline -->
+			<script>
+			/* There are various things that can cause a script to start executing. Reading a <script> tag, an event firing is another, or even a function. Its important
+			to understand that even though events can fire at any time, no two scripts in a single document ever run at the same moment. If a script is already running,
+			event handlers and pieces of code scheduled in other ways have to wait their turn. This is the reason a document will freeze when a script runs for a long
+			time. The browser cannot react to clicks and other events inside the document because it can't run event handlers until the current script finishes running.
+
+			Although some programming environments do allow multiple threads of execution, and can do this to make a program faster. But when you have multiple actors
+			touching the same parts of the system at the same time, thinking about a program becomes an order of magnitude harder. Javascript does this to make your life
+			easier. 
+
+			But if you really want to do some time-consuming thing in the background without freezing the page, browsers provide something called web workers. A worker
+			is an isolated Javascript environment that runs alongside the main program for a document, and can communicate with it only by sending and receiving messages.
+			*/
+
+			/*
+			// So lets assume you have a chapter14_squareworker.js file
+			var squareWorker = new Worker("chapter14_squareworker.js");
+			squareWorker.addEventListener("message", function(event) {
+				console.log("The worker responded: ", event.data);
+			});
+			squareWorker.postMessage(10); // Should output 100
+			squareWorker.postMessage(24); // Should output 576
+			*/
+			</script>
+
+		<!-- Now lets cover setting timers -->
+			<script>
+				/* The setTimeout function is similar to requestAnimationFrame. It schedules another function to be called later. But instead of calling it at the
+				next redraw, it waits a given amount of milliseconds. This page turns from white to blue after 10 seconds */
+				document.body.style.background = "white"
+				setTimeout(function() {
+					document.body.style.background = "lightblue";
+				}, 10000);
+
+				/* Sometimes you need to cancel a function you have scheduled. This is done by storing the value returned by setTimeout and calling clearTimeout on it. */
+				var bombTimer = setTimeout(function() { // Set a timer that will call a function in 500 milliseconds
+					console.log("BOOM!"); // Output BOOM when 500 milliseconds passes
+				}, 500);
+				if (Math.random() < 0.5) { // 50% chance. This executes first before the timer, so it has time to clearTimeout, or cancel the timer
+					console.log("Defused."); // Output defused
+					clearTimeout(bombTimer); // Cancel the BombTimer timer
+				}
+
+				/* The cancelAnimation frame along with requestAnimationFrame works in the same way as setTimout and clearTimout in that it will cancel the frame (if it
+				hasn't already been called). A similar set of functions, setInterval and clearInterval are used to set timers that should repeat every X milliseconds
+				(EXTREMELY USEFUL) */
+				var ticks = 0; // Create a variable ticks and set to 0
+				var clock = setInterval(function() { // Set clock to equal to setInterval()
+					console.log("tick", ticks++); // Output tick and increment ticks (didn't know you can increment values inside console.log())
+					if (ticks == 10) { // If ticks equals 10
+						clearInterval(clock); // Clear or stop the clock
+						console.log("stop."); // Output stop
+					}
+				}, 200); // Set speed of repitition to 200 milliseconds!
+			</script>
+
+		<!-- Now lets cover debouncing -->
+		<textarea>Type something here...</textarea>
+			<script>
+			/* Some events have the potential to fire rapidly, many times in a row (like mousemove and scroll). When handling such events, you must be careful not to
+			do anything too time-consuming or your handler will take up so much time that interaction with the document starts to feel slow and choppy. If you do
+			need to do something nontrivial with such a handler, use setTimeout to make sure you are not doing it too often. This is called debouncing the event. */
+			*/
+				var textarea = document.querySelector("textarea"); // Bind textarea to the textarea tag above
+				var timeout; // Create an empty variable "timeout"
+				textarea.addEventListener("keydown", function() { // Add an event listener for whenever a keydown event fires inside textarea
+					clearTimeout(timeout); // Clear any timer binded to timeout
+					timeout = setTimeout(function() { // Reapply the binding of timeout to a timer
+						console.log("You stopped typing..."); // Output a message whenever the user stops timing
+					}, 500); // Wait 500 milliseconds
+				});
+			</script>
+	</body>
+</html>

@@ -1,0 +1,30 @@
+<!-- So we are going to slightly change the template to add some styling and add some static content in! -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Handlebars with Static content</title>
+		<style>
+			* {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			div {
+				display: flex;
+				align-items: center;
+				padding: 1em;
+				font-size: 1.2em;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Handlebars</h1>
+		<!-- Instead of creating a list, lets use divs and make it fancy -->
+		{{#each users as |user|}}
+		<div>
+			<!--<img src="{{user.username}}_sm.jpg" alt=""> but lets be more specific Your probably wondering why you didn't use any sort of source folder, its because you declared the static directory to be images. But I want to use a more specific version of it. So look below-->
+			<img src="/profilepics/{{user.username}}_sm.jpg" alt="">
+			<a href="/{{user.username}}">{{user.name.full}}</a>
+		</div>
+		{{/each}}
+	</body>
+</html>

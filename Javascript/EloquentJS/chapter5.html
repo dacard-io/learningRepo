@@ -1,0 +1,242 @@
+<!--
+	Okay now I'm entering Chapter 5. Holy hell this is getting real. My head hurts. Can't wait to cover the DOM
+
+	This section covers High-order functions! I don't even know what that means!
+-->
+<html>
+	<head>
+		<title>Chapter 5 - High-Order Functions</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			// So lets cover abstractions
+			/* Abstractions are exactly what you think they are. They "abstract" details and give us the ability to talk about problems
+				at a higher (or more abstract level). Lets look at the example: */
+			var array = [1, 2, 3]; // Create an array
+			for (var i = 0; i < array.length; i++) { // Set i to 0, while i less than number of array elements, increment i and perform loop
+				var current = array[i]; // Set current to equal the element at array index i
+				console.log(current); // Output the variable current
+			}
+			// But why does it have to be a for statement with a variable declaration. Lets abstract it with a function!
+			function logEach(array) {
+				for (var i = 0; i < array.length; i++) {
+					console.log(array[i]);
+				}
+			} // and boom! thats what abstraction is. Don't let fancy programming terminology scare you
+
+			// Now lets cover higher-order functions
+			/* High-order functions are functions that operate on other functions, either by taking them as arguments or returning them. If you
+				didn't notice, functions are basically regular values. Yes they do calculate something, but they return a value. So using them in
+				a function shouldn't be a problem. High-order functions can help to abstract over actions, not just values */
+			
+			// Heres a function that creates a function
+			function greaterThan(n) { // greaterThan takes one argument
+				return function(m) { // Return value of function with argument (m). Argument m is passed only when n is already passed.
+					return m > n; // Return the evaluation of whether m is greater than m. If so, return true
+				}
+			}
+			var greaterThan10 = greaterThan(10); // Predetermine argument n - a very strange concept to me
+			console.log(greaterThan10(11)); // Since argument n is aleady passed, the other argument passed should be m. Should output -> true
+
+			// Heres a function that provides new types of control flow in a program
+			function unless(test, then) {
+				if (!test) then();
+			}
+			function repeat(times, body) {
+				for (var i = 0; i < times; i++) {
+					body(i);
+				}
+			}
+			repeat(3, function(n) {
+				unless(n % 2, function() {
+					console.log(n, "is even");
+				});
+			}); // Output -> 0 is even, 2 is even (*MIND BLOWN)
+
+			// Now lets cover passing along arguments
+			/* Observe a function defined earlier */
+			function noisy(f) {
+				return function(arg) {
+					console.log("calling with", arg);
+					var val = f(arg);
+					console.log("called with", arg, "- got", val);
+					return val;
+				};
+			}
+			/* This function has a big problem. If f takes more than one parameter, it gets only the first one. It would also deprive us of information from arguments.length.
+
+			For these situations, Javascript has an apply method that can pass as an array-like object. Take a look: */
+			function transparantWrapping(f) {
+				return function() {
+					return f.apply(null, arguments);
+				}
+			}
+			/* Its a useless function but its construct can be applied in a variety of situations. The function it returns passes all of the given arguments, to argument "f". Extremely useful. It does this by passing its own arguments object to apply. The first argument to apply, for which we are passing null, can be used to simulate a method call. Well use apply more in the next chapter. */
+
+			// Now lets cover JSON (thank god)
+			/* JSON stands for Javascript Object Notation and is simply a format in which data can be read. APIs use this format, and you can manipulate JSON data in many different ways. JSON data can be saved into an actual *.json file! lets go over basic usage.*/
+			
+			// We are going to include it as an actual JSON file! You can take a look at the way data is formatted in the other file. Now lets work with JSON!
+			var string = JSON.stringify({name: "X", born: 1980});
+			console.log(string); // Output should be -> {"name":"X","born":1980}
+			console.log(JSON.parse(string).born); // Output should be -> 1980
+			/* Okay so the way this works, is that we aren't exactly using the JSON file just yet. We're showing how JSON data is passed through. You can see that
+			JSON.stringify takes the values given and returns an encoded string. JSON.parse then takes the string and converts it to the value it encodes. You can see
+			that just like an object, you can pull the property out of the JSON data. Now lets actually use the JSON file this time! */
+			var ANCESTRY_FILE = "[\n  " + [ // Ignore the wrappers, you will learn this later. You will also learn how to load this externally later!
+			  '{"name": "Carolus Haverbeke", "sex": "m", "born": 1832, "died": 1905, "father": "Carel Haverbeke", "mother": "Maria van Brussel"}',
+			  '{"name": "Emma de Milliano", "sex": "f", "born": 1876, "died": 1956, "father": "Petrus de Milliano", "mother": "Sophia van Damme"}',
+			  '{"name": "Maria de Rycke", "sex": "f", "born": 1683, "died": 1724, "father": "Frederik de Rycke", "mother": "Laurentia van Vlaenderen"}',
+			  '{"name": "Jan van Brussel", "sex": "m", "born": 1714, "died": 1748, "father": "Jacobus van Brussel", "mother": "Joanna van Rooten"}',
+			  '{"name": "Philibert Haverbeke", "sex": "m", "born": 1907, "died": 1997, "father": "Emile Haverbeke", "mother": "Emma de Milliano"}',
+			  '{"name": "Jan Frans van Brussel", "sex": "m", "born": 1761, "died": 1833, "father": "Jacobus Bernardus van Brussel", "mother":null}',
+			  '{"name": "Pauwels van Haverbeke", "sex": "m", "born": 1535, "died": 1582, "father": "N. van Haverbeke", "mother":null}',
+			  '{"name": "Clara Aernoudts", "sex": "f", "born": 1918, "died": 2012, "father": "Henry Aernoudts", "mother": "Sidonie Coene"}',
+			  '{"name": "Emile Haverbeke", "sex": "m", "born": 1877, "died": 1968, "father": "Carolus Haverbeke", "mother": "Maria Sturm"}',
+			  '{"name": "Lieven de Causmaecker", "sex": "m", "born": 1696, "died": 1724, "father": "Carel de Causmaecker", "mother": "Joanna Claes"}',
+			  '{"name": "Pieter Haverbeke", "sex": "m", "born": 1602, "died": 1642, "father": "Lieven van Haverbeke", "mother":null}',
+			  '{"name": "Livina Haverbeke", "sex": "f", "born": 1692, "died": 1743, "father": "Daniel Haverbeke", "mother": "Joanna de Pape"}',
+			  '{"name": "Pieter Bernard Haverbeke", "sex": "m", "born": 1695, "died": 1762, "father": "Willem Haverbeke", "mother": "Petronella Wauters"}',
+			  '{"name": "Lieven van Haverbeke", "sex": "m", "born": 1570, "died": 1636, "father": "Pauwels van Haverbeke", "mother": "Lievijne Jans"}',
+			  '{"name": "Joanna de Causmaecker", "sex": "f", "born": 1762, "died": 1807, "father": "Bernardus de Causmaecker", "mother":null}',
+			  '{"name": "Willem Haverbeke", "sex": "m", "born": 1668, "died": 1731, "father": "Lieven Haverbeke", "mother": "Elisabeth Hercke"}',
+			  '{"name": "Pieter Antone Haverbeke", "sex": "m", "born": 1753, "died": 1798, "father": "Jan Francies Haverbeke", "mother": "Petronella de Decker"}',
+			  '{"name": "Maria van Brussel", "sex": "f", "born": 1801, "died": 1834, "father": "Jan Frans van Brussel", "mother": "Joanna de Causmaecker"}',
+			  '{"name": "Angela Haverbeke", "sex": "f", "born": 1728, "died": 1734, "father": "Pieter Bernard Haverbeke", "mother": "Livina de Vrieze"}',
+			  '{"name": "Elisabeth Haverbeke", "sex": "f", "born": 1711, "died": 1754, "father": "Jan Haverbeke", "mother": "Maria de Rycke"}',
+			  '{"name": "Lievijne Jans", "sex": "f", "born": 1542, "died": 1582, "father":null, "mother":null}',
+			  '{"name": "Bernardus de Causmaecker", "sex": "m", "born": 1721, "died": 1789, "father": "Lieven de Causmaecker", "mother": "Livina Haverbeke"}',
+			  '{"name": "Jacoba Lammens", "sex": "f", "born": 1699, "died": 1740, "father": "Lieven Lammens", "mother": "Livina de Vrieze"}',
+			  '{"name": "Pieter de Decker", "sex": "m", "born": 1705, "died": 1780, "father": "Joos de Decker", "mother": "Petronella van de Steene"}',
+			  '{"name": "Joanna de Pape", "sex": "f", "born": 1654, "died": 1723, "father": "Vincent de Pape", "mother": "Petronella Wauters"}',
+			  '{"name": "Daniel Haverbeke", "sex": "m", "born": 1652, "died": 1723, "father": "Lieven Haverbeke", "mother": "Elisabeth Hercke"}',
+			  '{"name": "Lieven Haverbeke", "sex": "m", "born": 1631, "died": 1676, "father": "Pieter Haverbeke", "mother": "Anna van Hecke"}',
+			  '{"name": "Martina de Pape", "sex": "f", "born": 1666, "died": 1727, "father": "Vincent de Pape", "mother": "Petronella Wauters"}',
+			  '{"name": "Jan Francies Haverbeke", "sex": "m", "born": 1725, "died": 1779, "father": "Pieter Bernard Haverbeke", "mother": "Livina de Vrieze"}',
+			  '{"name": "Maria Haverbeke", "sex": "m", "born": 1905, "died": 1997, "father": "Emile Haverbeke", "mother": "Emma de Milliano"}',
+			  '{"name": "Petronella de Decker", "sex": "f", "born": 1731, "died": 1781, "father": "Pieter de Decker", "mother": "Livina Haverbeke"}',
+			  '{"name": "Livina Sierens", "sex": "f", "born": 1761, "died": 1826, "father": "Jan Sierens", "mother": "Maria van Waes"}',
+			  '{"name": "Laurentia Haverbeke", "sex": "f", "born": 1710, "died": 1786, "father": "Jan Haverbeke", "mother": "Maria de Rycke"}',
+			  '{"name": "Carel Haverbeke", "sex": "m", "born": 1796, "died": 1837, "father": "Pieter Antone Haverbeke", "mother": "Livina Sierens"}',
+			  '{"name": "Elisabeth Hercke", "sex": "f", "born": 1632, "died": 1674, "father": "Willem Hercke", "mother": "Margriet de Brabander"}',
+			  '{"name": "Jan Haverbeke", "sex": "m", "born": 1671, "died": 1731, "father": "Lieven Haverbeke", "mother": "Elisabeth Hercke"}',
+			  '{"name": "Anna van Hecke", "sex": "f", "born": 1607, "died": 1670, "father": "Paschasius van Hecke", "mother": "Martijntken Beelaert"}',
+			  '{"name": "Maria Sturm", "sex": "f", "born": 1835, "died": 1917, "father": "Charles Sturm", "mother": "Seraphina Spelier"}',
+			  '{"name": "Jacobus Bernardus van Brussel", "sex": "m", "born": 1736, "died": 1809, "father": "Jan van Brussel", "mother": "Elisabeth Haverbeke"}'
+			].join(",\n  ") + "\n]";
+
+			var ancenstry = JSON.parse(ANCESTRY_FILE); // No need to stringify since the JSON data already has been stringified!
+			console.log(ancenstry.length) // Should output the amount of objects found in the JSON file, which is -> 39
+
+			// Now lets cover filtering an array (Another construct!)
+			function filter(array, test) { // Create a function filter that passes two arguments
+				var passed = []; // Create an empty array called "passed"
+				for (var i = 0; i < array.length; i++) { // Set i to equal 0, while i less than array.length, increment i and perform loop
+					if (test(array[i])) // Use "test" argument to return whether an element is included in the returned array. If true, perform condition
+						passed.push(array[i]); // Push data into the array "passed" created earlier
+				}
+				return passed; // Return "passed" array
+			}
+
+			console.log(filter(ancenstry, function(person) {		// I'm not really familiar with this sort of method of filtering. But you must learn!
+				return person.born > 1900 && person.born < 1925;	// Use the second argument of the filter function to actually do the filtering
+			})); // Output should be objects, and should find the objects associated with what you wanted filtered
+
+			console.log(filter(ancenstry, function(person) { 		//  Do the same kind of thing. Filtering by the "father" property
+				return person.father == "Carel Haverbeke";			//  Should return an object with the object that has "Carel" as the father property
+			}));
+
+			// Now lets cover transforming with map
+			/* Lets say we have an array of objects representing people, produced by filtering the ancestry array somehow. But we want an array of names which
+			is alot easier to read. The "map" method transforms an array by applying a function to all of its elements and building a new array from the returned
+			values. The new array will have the same length as the input array, but its conent will have been "mapped" to a new form by the function */
+			function map(array, transform) { // So create a function called "map" that takes two arguments
+				var mapped = []; // Create an empty array
+				for (var i = 0; i < array.length; i++) { // Set i to 0, while i less than array.length, increment i and perform loop
+					mapped.push(transform(array[i])); // Push data given in the second argument into the mapped array
+				}
+				return mapped; // Return mapped array
+			}
+
+			var overNinety = ancenstry.filter(function(person) { // 
+				return person.died - person.born > 90;
+			});
+			console.log(map(overNinety, function(person) {
+				return person.name;
+			})); // Output should return an array of search results. -> ["Clara Aernoudts", "Emile Haverbeke", "Maria Haverbeke"]
+
+			// Now lets cover using a reduce function
+			/* Another method we are going to be looking at is getting several arrays and computing a single value from them. */
+
+			function reduce(array, combine, start) { // Create a function called "reduce" that takes three arguments
+				var current = start; // Create a variable "current" and set it to equal the third argument "start"
+				for (var i = 0; i < array.length; i++) { // Set i to 0, while i less than array.length, increment i and perform loop
+					current = combine(current, array[i]); // Rewrite current's value to create a combine function that takes two parameters
+				}
+				return current; // Return the evaluation
+			}
+
+			console.log(reduce([1, 2, 3, 4], function(a, b) { // So use the reduce function by passing in the array [1,2,3,4], then create the combine function
+				return a + b; // Return a a + b
+			}, 0)); // Output should be -> 10
+
+			// We can use reduce to find the most ancient known ancestor
+			console.log(ancenstry.reduce(function(min, cur) { // SO take the ancestry JSON data, and reduce with the function that takes two arguments
+				if (cur.born < min.born) return cur;
+				else return min; // Else that means the current object is the oldest ancestor, and return
+			})); // Should output an object with "name" "Pauwels van Haverbeke" born in 1535
+
+			// Lets go over composability
+			// Now lets actually write the previous example without high-order functions to see what it would normally look like
+			var min = ancenstry[0]; // Set min to equal the first element of the ancestry JSON data
+			for (var i = 1; i < ancenstry.length; i++) { // Set i to equal 1, if i is less than the amount of objects in the ancestry array, increment i and loop
+				var cur = ancenstry[i]; // Set cur to equal ancestry with index i
+				if (cur.born < min.born) // If cur's property born is less than min's born property, then perform the condition
+					min = cur; // Set min to equal cur
+			} 
+			console.log(min); // Should output an object with "name" "Pauwels van Haverbeke" born in 1535
+			/* To be honest that was alot easier, but this chapter is about using functions to help perform calculations, so its good to go over all the kinds
+			of different methods you can use to simplify tasks. Although there are a few more variables and the program is longer, it is alot easier to understand.
+			High-order functions really show their utility when you need to "compose" functions. Here an example, lets write some code that finds the average age for
+			men and women in the dat set. */
+			
+			function average(array) { // Create a function "average" that takes an one argument
+				function plus(a, b) { return a + b; } // Create a function inside average called "plus" that takes two arguments, and adds them together (...why?)
+				return array.reduce(plus) / array.length; // Return array.reduce(plus) divided by the number of objects passed throygh the array argument
+			}
+			function age(p) { return p.died - p.born; }
+			function male(p) { return p.sex == "m"; }
+			function female(p) { return p.sex == "m"; }
+
+			console.log(average(ancenstry.filter(male).map(age))); // Output should be -> 61.67
+			console.log(average(ancenstry.filter(female).map(age))); // Output should be -> 54.56
+
+			/* Now your starting to see why high-order functions are great to implement. Look at how clean and easy to understand that code is. No not the function aspect
+			   of it, but the actual way you type it. No iterative loops or anything. Although the "plus" function seems a bit silly. But there is a cost to using
+			   this kind of coding... */
+
+			/* Although high-order functions are awesome and can make code incredibly readable, declaring all these functions and intermediate arrays/arrays inside functions
+			etc. are costly to the applications performance. Remember, if you see a slow down in your code, it might be that there is an inner loop inside of a loop. 
+			Code cautiously. */
+
+			// Now lets go over binding
+			/* The bind method (which all functions have), creates a new function that will call the original function but with some of the arguments already fixed.
+			The following code shows an example of bind in use. It defines a function isInSet that tells us whether a person is in a given set of strings. To call filter
+			in order to collect those person objects whose names are in a specific set.
+			*/
+			var theSet = ["Carek Haverbeke", "Maria van Brussel", "Donald Duck"];
+			function isInSet(set, person) {
+				return set.indexOf(person.name) > -1;
+			}
+
+			console.log(ancenstry.filter(function(person) {
+				return isInSet(theSet, person);
+			})); // Should output -> [{name: "Maria van Brussel", ...}, {name: "Carel Haverbeke", ...}]
+			console.log(ancenstry.filter(isInSet.bind(null, theSet))); // Should output the same result
+			/* The call to bind returns a function that will call isInSet with theSet as the first argument, followed by any remaining arguments given to the
+			bound function. The first argument null, is used for method calls, similar to the first argument to apply. Will go over more of this in the next chapter */
+
+			</script>
+	</body>
+</html>

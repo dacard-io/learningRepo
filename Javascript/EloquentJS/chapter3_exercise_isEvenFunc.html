@@ -1,0 +1,27 @@
+<!--
+	Chapter 3 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 3 - Functions</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+		function isEven(number) {
+			if (number % 2 == 0) { // If number passed in is divisible by 2, return true
+				return true;
+			}
+			else {
+				return false; // Else return false
+			}
+		}
+
+		console.log(isEven(100)); // Should return true
+		// Test a couple more times. Verify console for correct results
+		console.log(isEven(25)); // Should return false
+		console.log(isEven(3)); // Should return false
+		console.log(isEven(2)); // Should return true
+		</script>
+	</body>
+</html>

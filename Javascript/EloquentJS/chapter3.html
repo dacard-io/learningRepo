@@ -1,0 +1,176 @@
+<!--
+	So this is the 3rd chapter of Eloquent Javascript I'm going to cover!
+	Some chapters have pure information and no examples, so I might not create
+	a file for that chapter! Also do the excercises for each chapter!!!
+
+	This section covers functions!
+-->
+<html>
+	<head>
+		<title>Chapter 3 - Functions</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			// Lets create a function, notice it is declared inside a variable
+			var square = function(x) {
+				return x * x;
+				// Return the parameter multipled by itself
+			}
+			// Now output and call the function 
+			console.log(square(12)); //Output shoukd be 144
+
+			// Now create a function called makeNoise that takes no arguments/parameters
+			var makeNoise = function() {
+				console.log("Pling!");
+			};
+			// Now run the makeNoise function
+			makeNoise(); // Should output "Pling!"
+
+			// Now crate a function "power" that takes takes two arguments
+			var power = function(base, exponent) {
+				var result = 1; 
+				for (var count = 0; count < exponent; count++) {
+					result *= base;
+				}
+				return result; // Return the result
+			}
+			console.log(power(2, 10)); // Should output 1024
+
+			// Now lets go over scopes! Remember when declaring variables inside a function, they only exist within that function!
+			var x ="outside";
+			var f1 = function() {
+				var x = "inside f1";
+			};
+			
+			f1(); // f1 will print the variable inside f1, x which equals "inside f1"
+			console.log(x); // x will print outside
+
+			var f2 = function() {
+				x = "inside f2";
+			};
+			f2();
+			console.log(x);
+
+			/* Now notice the behavior: Look at the output, and that it didn't print inside f1.
+
+				outside
+				inside f2
+
+				Thats because a new variable "x" was declared inside f1, while inside f2 changed the existing
+				value of "x" to "inside f2". */
+
+			// Now lets go over declaration notation!
+			/* Declaration notation is a slighter shorter way to declare a function that is actually similar to C.
+			   Instead of writing it as var square = function... its the typical function square() {} */
+			console.log(future());
+			function future() {
+				return "We STILL have no flying cars.";
+			}
+			/* Notice that you placed the function below the console.log and it still outputed properly, thats because
+				when you write functions in declaration notation, the function is conceptually moved to the top of your code,
+				regardless of where you actually declared a function */
+
+			/* Now about nesting in declaration notation, in the latest standard of Javascript you cannot nest declaration
+				notated functions in conditionals, only nest in the outermost block of a function. Example:
+
+				function example(){
+					function a(){} // << This function is okay and safe to declare
+					if (something) {
+						function b(){} // << This is very bad, and can lead to unpredictable behavior in your program!
+					}
+				}
+			*/
+
+			// Now lets cover optional arguments
+			alert("Hello", "Good Evening", "How are you?");
+			/* Javascript is incredibly open when it comes to arguments. alert() only takes one argument, so instead of throwing
+				an exception, it simply ignores the other ones. This can be great because you can write functions that take multiple
+				types of arguments, which will be the next example */
+
+			function power(base, exponent) { // Declare power function which takes two arguments
+				var result = 1; // Set result to 1 to perform exponential calculations to it
+				if (exponent == undefined) { // If exponent not defined, perform condition
+					exponent = 2; // Manually set the exponent to equal 2
+				}
+				for (var count = 0; count < exponent; count++) { // Count = 0, if count less than exponent, increment count and perform loop
+					result = result * base; // Multiply result by base and set the value to result
+				}
+				return result; // Return the result
+			}
+			console.log(power(4)); // Answer should be 16, because if exponent argument missing, its automatically assumed to be 2
+			console.log(power(4,3)); // Answer should be 64 since its by the exponent of 3!
+			// Okay not sure why the function above is not working properly, fix later so you don't get stuck on it!
+
+			// Now we're going to cover closures, or what happens to local variables when the function call creating them is no longer active
+			function wrapValue(n) {
+				var localVariable = n;
+				return function() { return localVariable; };
+			}
+			var wrap1 = wrapValue(1);
+			var wrap2 = wrapValue(2);
+			console.log(wrap1()); // << Should output 1
+			console.log(wrap2()); // << Should output 2
+			/* This allows you to still access the variables. Even multiple instances of them. This feature of being able to reference a specific
+				instance of local variables in an enclosing function is called CLOSURE. A function that "closes over" some local variables is
+				called "A CLOSURE". This feature helps you to stop worrying about the lifetime of variables and also allow for some creative use of
+				function values. */
+
+			// Now lets go over recursion. I already know what this is, but I'm going to cover it again anyway!
+			/* Recursion is when a function calls itself. You can do this, but you have to be careful to not overflow the stack, or you'll get an error */
+			function power(base, exponent) { // Declare function called power that takes two arguments
+				if (exponent == 0) { // If exponent is 0, then the answer is automatically 1
+					return 1; // Return 1
+				} else { // Else if exponent something else, perform this condition
+					return base * power(base, exponent - 1); // Return base argument * power(base, exponet - 1) [HEAD IS STARTING TO HURT]
+				}
+			}
+			console.log(power(2, 3)); // << Output should be 8
+			/* Now recursion is an elegant way of doing things but you have to be careful. A loop is about 10 times faster than the recursion
+				version of this function. But the general rule is to not worry about the effeciency of things until your program becomes slow */
+
+			// Now lets cover growing functions
+			// This function will get the number of cows and chickens, and print them and pad the number with zeros to equal a length of 3 characters!
+			function printFarmInventory(cows, chickens) {
+				var cowString = String(cows); // Convert to string to use .length to calculate # of characters
+				while (cowString.length < 3) {
+					cowString = "0" + cowString; // Add a 0 to the end of cowString, thus increasing its length to end the while loop
+				}
+				console.log(cowString + " Cows"); // Print the number of cows
+				var chickenString = String(chickens);
+				while (chickenString.length < 3) {
+					chickenString = "0" + chickenString; // Add a 0 to the end of chickenString, thus increasing its length to end the while loop
+				}
+				console.log(chickenString + " Chickens"); // Print number of chickens
+			}
+			printFarmInventory(9, 13); // Use the function to print number of cows and chickens << Should print 009 Cows / 013 Chickens
+			// Heres another of method of doing the same thing, in a much nicer fashion
+			function zeroPad(number, width) {
+				var string = String(number);
+				while (string.length < width) {
+					string = "0" + string;
+				}
+				return string;
+			}
+			function printFarmInventory2(cows, chickens, pigs) {
+				console.log(zeroPad(cows, 3) + " Cows");
+				console.log(zeroPad(chickens, 3) + " Chickens");
+				console.log(zeroPad(pigs, 3) + " Pigs");
+			}
+			printFarmInventory2(7, 16, 3); // A much much cleaner and more modular way of doing things. But it does the same thing
+			/* Coming from the author of this book, I'm just going to reiterate something I already know. A useful principle to always
+				remember is to not add cleverness unless your absolutely sure your going to need it. It can be tempting to write small
+				general "frameworks" for every little bit of functionality, but resist that urge. You won't get any real work done, and
+				you'll end up writing a bunch of code that no one will ever use. */
+
+
+			/* Now before closing out, remember the difference between the two ways to define a function:
+			var square = function(){};     and       function square(){};
+			Called a function expression		     Called a labeled function
+
+			The one declared inside a variable is to prevent hoisting(being called before being declared) and the other allows
+			hoisting, or calling at anytime in the program. So using constructors (covered later) won't work on the function inside
+			the variable. So you can use the variable function declarations inside an if statement, while the other can't be.*/
+		</script>
+	</body>
+</html>

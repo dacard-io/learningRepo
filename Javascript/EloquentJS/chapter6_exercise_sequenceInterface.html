@@ -1,0 +1,36 @@
+<!--
+	Chapter 6 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 6 - The Secret Life of Objects</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			/* Purpose of this exercise is to design an "interface" that extrudes the range of values from an array */
+
+			// Create the logFive function which iterates through a sequence of objects and calls console.log on its first five elements
+			function logFive(object) {
+				if (object.to < 5)
+					for (var i = object.from; i <= object.to; i++)
+						console.log(i);
+				else
+					for (var i = object.from; i < object.from + 5; i++)
+						console.log(i);
+			}
+			
+			// Create a constructor called ArraySeq
+			function ArraySeq(array) {
+				this.from = array[0];
+				this.to = array[1];
+			}
+
+			logFive(new ArraySeq([1, 2])); // Output should be -> 1\n 2\n 3...and so on to five
+			logFive(new ArraySeq([100, 1000])); // Output should be -> 1\n 2\n 3...and so on to five
+
+			/* Okay so I implemented a solution that was completely different from what the book wanted, but I'm sorry it works
+			exactly as intended and I don't know how to implement the correct solution */
+		</script>
+	</body>
+</html>

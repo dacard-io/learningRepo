@@ -1,0 +1,25 @@
+<!--
+	Chapter 14 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 14 - Event Handlers</title>
+	</head>
+	<body>
+		<input type="text">
+		<!-- Script goes below here! -->
+		<script>
+			/* Create a text field that Q, W, and X cannot be typed into */
+			var field = document.querySelector("input");
+			field.addEventListener("keydown", function(event) {
+				// console.log(event.keyCode); <- Use this to output the keycode of anything typed
+				// Keycodes: Q = 81, W = 87, X = 88
+				if (event.keyCode == 81 || event.keyCode == 87 || event.keyCode == 88) {
+					event.preventDefault();
+				}
+			});
+
+			/* Haha that was too easy! On to the next exercise! */
+		</script>
+	</body>
+</html>

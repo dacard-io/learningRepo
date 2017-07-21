@@ -1,0 +1,44 @@
+<!--
+	Finally, we get to break up programs into pieces and load them from files. 
+	Wait... so this section doesn't cover that... I thought modules were seperate files...
+	Eh I'll look it up later. Oh you just use the properties of HTML haha. Okay then
+
+	This section covers modules!
+-->
+<html>
+	<head>
+		<title>Chapter 10 - Modules</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			// Lets cover using functions as namespaces
+			var names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+			function dayName(number) {
+				return names[number];
+			}
+
+			console.log(dayName(1)); // Output -> Monday
+			/* The dayName function is part of the modules interface, but the names variable is not. We would prefer not to spill it into the global scope. 
+			So lets try this: */
+			var dayName = function() {
+				var names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+				return function(number) {
+					return names[number];
+				};
+			}(); // Okay don't let the extra parenthesis confuse you, the empty parenthesis here is to execute the anonymous function
+			console.log(dayName(3));
+			/* Now names is a local variable (inside an unnamed function). Now lets use a similar pattern to isolate code from the outside world entirely. The module
+			below logs a value to the console but does not actually provide any values for other modules to see */
+			(function() {
+				function square(x) {return x * x; }
+				var hundred = 100;
+
+				console.log(square(hundred));
+			})(); // The extra parenthesis execute the anonymous function
+
+			// 
+			// Okay this section covers technical parts of namespacing... I know I should probably look at it, I'd like to move to modifying the DOM...I'll do the rest later
+		</script>
+	</body>
+</html>

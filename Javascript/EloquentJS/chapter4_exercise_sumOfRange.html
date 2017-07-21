@@ -1,0 +1,30 @@
+<!--
+	Chapter 4 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 4 - Objects and Arrays</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			function range(arg_x, arg_y) {
+				table = []; // Create an empty table
+				for (var i = arg_x; i <= arg_y; i++) { // Let i equal arg_x, while i less than or equal to arg_y, increment i and loop
+					table.push(i); // Push i into the array
+				}
+				return table; // Return table
+			}
+			function sum(item) {
+				var result = 0; // Set result to 0
+				for (var i = 0; i < item.length; i++) { // Let i equal 0, while i is less than the number of items passed through 1st argument, increment i and loop
+					result += item[i]; // Set result to equal array passed through item arg., and the index number
+				}
+				return result; // Return result
+			}
+
+			console.log(range(1, 10)); // Outputs -> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+			console.log(sum(range(1, 10))); // Should output -> 55
+		</script>
+	</body>
+</html>

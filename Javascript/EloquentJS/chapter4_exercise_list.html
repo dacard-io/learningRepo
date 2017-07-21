@@ -1,0 +1,32 @@
+<!--
+	Chapter 4 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 4 - Objects and Arrays</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			/* Here is the list construct:
+
+				Object
+				value: 1
+				rest:  ------> Object
+							   value: 1
+							   rest:  ------> Object
+											  value: 1
+											  rest:  ------>
+			*/
+			function arrayToList(array) {
+				var object = null; // Set object to null, don't actually have to, but doing it anyway
+				for (var i = array.length - 1; i >= 0; i--) { // set i to array argument amount - 1, while i is greater than or equal to 0, increment i
+					object = {value: array[i], rest:object}; // set object's value property to i, and rest property to the object itself
+				}
+				return object; // Return object
+			}
+
+			console.log(arrayToList([10, 20])); // Output should be -> {value: 10, rest: {value: 20, rest: null}}
+		</script>
+	</body>
+</html>

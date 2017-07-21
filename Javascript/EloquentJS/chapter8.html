@@ -1,0 +1,86 @@
+<!--
+	This chapter is going to cover some more important features of Javascript. We are almost out of the syntax part of it! Holy shit Javascript
+	is so expansive my god
+
+	This section covers bugs and error-handling!
+-->
+<html>
+	<head>
+		<title>Chapter 8 - Bugs and Error Handling</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			// Lets go over strict mode
+			/* As you know Javascript tends to be rather lax when it comes to detecting problems in your code. One way to counteract this is by putting the string
+			"use strict" at the top of a file or function body */
+			function canYouSpotTheProblem() { 
+				"use strict"; // Enable strict mode
+				for (counter = 0; counter < 10; counter++) // In the for loop, "var" is left out to declare the variable. Unfortunately JS won't usually catch this
+					console.log("Happy hour");
+				/* Normally if you forget to put the var in the for loop, Javascript will automatically create a global variable for it. This may cause unintended
+				issues with your program, so be sure to debug your code */
+			}
+
+			canYouSpotTheProblem(); // Should give you an error, which is a good thing!
+			/* So that concludes strict mode. Strict mode does more of course, it doesn't allow giving a function multiple parameters with the same name and removes
+			certain problematic language features entirely (such as the "with" statement, which is so misguided, it is not discussed in this book). So when debugging,
+			putting "use strict" at the top of your entire program rarely hurts and helps spot problems. */
+
+			// Now lets go over exceptions
+			/* When a function cannot proceed normally what we would like to do is just stop what we are doing and immediately jump back to a place that knows how to
+			handle the problem. That is what exception handling does. */
+			function promptDirection(question) { // Create a function to prompt for a user to try to go a direction
+				var result = prompt(question, ""); // Prompt the user
+				if (result.toLowerCase() == "left") return "L"; // If result is left return L
+				if (result.toLowerCase() == "right") return "R"; // If result is right return R
+				throw new Error("Invalid direction: " + result); // If the other conditions didn't go through, there is an error
+				/* The throw keyword is used to raise an exception, in order to catch one you have to use a "try" block, which is below */
+				/* Noticed you used a constructor called Error. This constructor comes default with Javascript and creates an object with a message
+				property. Whats extremely useful about Error, is that you can do a stack-trace, or get information on the call stack with the "stack" property.
+				As in, the .stack property outputs exactly which function the problem occured! */
+			}
+			function look() {
+				if (promptDirection("Which way?") == "L")
+					return "a house";
+				else
+					return "two angry bears";
+			}
+
+			try {
+				console.log("You see", look());
+			} catch (error) {
+				console.log("Something went wrong: " + error);
+			}
+
+			/* When the code in a try block causes an exception to be raised, the catch block is then evaluated. The variable name after catch will be bound
+			to the exception value. After the try and catch blocks complete execution, the program continues below the try and catch block as normal. */
+
+			// Now lets go over cleaning up after exceptions, and using the finally block
+			/* Consider the following function: */
+			var context = null;
+			function withContext(newContext, body) {
+				var oldContext = context;
+				context = newContext;
+				var result = body();
+				context = oldContext;
+				return result;
+			}
+			/* So what would happen if body raises an exception? In that case, the call to withContext will be thrown off the stack by an exception, and context will never
+			be set back to its old value */
+			/* So there is one more feature that try blocks contain, and that is the "finally" block. A finally block means "No matter what happens, run this code after trying to run the code in the try block". So if a function has to clean something up, the cleanup code should usually be put into a finally block. */
+			function withContext(newContext, body) {
+				var oldContext = context;
+				context = newContext;
+				try {
+					return body();
+				} finally {
+					context = oldContext;
+				}
+			}
+			/* Note that we don't store the results of body() anymore. Even if we try to run directly from the try block, the finally block will be run. */
+
+			// Will cover assertions later
+		</script>
+	</body>
+</html>

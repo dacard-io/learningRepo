@@ -1,0 +1,25 @@
+<!--
+	Chapter 4 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 4 - Objects and Arrays</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			function reverseArray(arg) {
+				var table = []; // Declare an empty array called table
+				// Use array methods to reverse the array
+				for (var i = 0; i <= arg.length + 1; i++) { // Set i to 0, while i less than or equal to arg.length + 1, increment i
+					var temp = arg.pop(); // Remove the first item from the table passed through arg, and store that item into the temp variable
+					table.push(temp); // On the new empty table, push the item stored in temp into the "table" array
+				}
+				return table; // When loop complete, return table array
+			}
+
+
+			console.log(reverseArray(["A", "B", "C"])); // Output -> ["C", "B", "A"]
+		</script>
+	</body>
+</html>

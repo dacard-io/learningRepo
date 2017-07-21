@@ -1,0 +1,52 @@
+<!--
+	Chapter 2 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 2 - Values Types and Operators</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			/* The purpose of this program is to create a string that represents an 8x8 grid using newline characters to seperate lines.
+				At each position of the grid there is either a space or a "#" character. Use the variable size to define the dimensions
+				of the board dynamically. It should then form a chessboard like so:
+
+				 # # # # 
+				# # # #
+				 # # # #
+				# # # #
+				 # # # #
+				# # # #
+				 # # # #
+				# # # #
+
+				This is actually an interview question that is commonly used to weed out shitty developers! */
+
+			var board = "";
+			var black = "#";
+			var white = "@";
+			var size = 3;
+
+			for (var count = 0; count < size * size; count++) {
+				if (count % size == 0) {
+					// If divisible by the size variable, add a newline
+					board += "\n";
+				}
+				else if (count % 2 == 0) {
+					// Add a black block if divisible by 3
+					board += black;
+				}
+				else {
+					// A white block, or "space" if not divisible by 3
+					board += white;
+				}
+			}	
+
+			// Output the chessboard
+			console.log(board);
+
+			// Okay so I got really close! I just have to figure out why the final column is not printing out on the chessboard. But thats it!
+		</script>
+	</body>
+</html>

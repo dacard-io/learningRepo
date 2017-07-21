@@ -1,0 +1,32 @@
+<!--
+	Chapter 5 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 5 - High-Order Functions</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			// Lets use the reduce method in combination with the "concat" method to flatten an array of arrays into a single array that has all the elements of the
+			// input arrays
+
+			var arrays = [[1,2,3], [4,5], [6]];
+			// Now code goes below. Goal is to produce output -> [1,2,3,4,5,6]
+
+			function reduce(array, combine, start) { // Create a function called "reduce" that takes three arguments
+				var current = start; // Create a variable "current" and set it to equal the third argument "start"
+				for (var i = 0; i < array.length; i++) { // Set i to 0, while i less than array.length, increment i and perform loop
+					current = combine(current, array[i]); // Rewrite current's value to create a combine function that takes two parameters
+				}
+				return current; // Return the evaluation
+			}
+			/* Okay the solution is below (not by me unfortunately). I feel kinda bad but this chapter was a little too difficult for me. It encapsulated functions inside functions and used functions as arguments for other functions. It was a little much for me. I'll come back to this chapter, I would definitely like to understand
+			it better later on */ 
+			console.log(arrays.reduce(function(flat, current) {
+				return flat.concat(current);
+			}, []));
+
+		</script>
+	</body>
+</html>

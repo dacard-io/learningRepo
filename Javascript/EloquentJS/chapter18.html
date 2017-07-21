@@ -1,0 +1,251 @@
+<!--
+	This section covers forms and fields!
+-->
+<html>
+	<head>
+		<title>Chapter 18 - Forms and Form fields</title>
+	</head>
+	<body>
+		<!-- Lets go over fields -->
+		<!-- A web form consists of any number of input fields grouped in a <form> tag. HTML allows a number of different styles of 
+		fields. Alot of field types use the <input> tag. The tag's type attribute is used to select the field's style. These are some
+		common ones:
+
+			text - A single text field
+			password - Same as text field, but hides the text that is typed
+			checkbox - Self explanatory
+			radio - Part of a multiple-choice field
+			file - Allows the user to choose a file from their computer
+
+		Then theres a textarea to type in a multiline field. And a select box, with multiple options. Whenever the value of a form
+		field changes, it fires a "change" event.
+		-->
+		<p><input type="text" value="abc"> (text)</p>
+		<p><input type="password" value="abc"> (password)</p>
+		<p><input type="checkbox" checked> (checkbox)</p>
+		<p><input type="radio" value="A" name="choice">
+		   <input type="radio" value="B" name="choice" checked>
+		   <input type="radio" value="C" name="choice"> (radio)</p>
+		<p><input type="file"> (file)</p>
+		<textarea>
+			one
+			two
+			three
+		</textarea><br/>
+		<select>
+			<option>Pancakes</option>
+			<option>Pudding</options>
+			<option>Ice cream</options>
+		</select>
+
+		<!-- Now lets cover focus events from fields -->
+		<input type="text" id="focus">
+		<script>
+			document.querySelector("#focus").focus(); // Control the focus of the input field using focus
+			console.log(document.activeElement.tagName); // Output the tagname of the active element
+			// -> INPUT
+			document.querySelector("#focus").blur(); // Remove focus of the input field using blur
+			console.log(document.activeElement.tagName); // Output the tagname of the active element
+			// -> BODY
+
+			/* For some pages, users are expected to wnt to interact with a form field immediately. We did use the
+			focus and blur methods, but we can also use the autofocus attribute in HTML as well. */
+		</script>
+		<input type="text" autofocus>
+		<input type="text" tabindex=1><a href=".">(help)</a> 
+		<!-- You can also use tabindex to indicate the order of which to move to another field when tab is pressed -->
+		<button onclick="console.log('ok')" tabindex=2>OK</button>
+
+		<!-- Now lets cover disabled fields -->
+		<button>I'm enabled</button>
+		<button disabled>I'm disabled</button> <!-- Haha thats all there is to it! -->
+
+		<!-- Now lets cover forms as a whole -->
+		<form action="chapter18.html">
+			Name: <input type="text" name="name"><br>
+			Password: <input type="password" name="password"><br>
+			<button type="submit">Log in</button><br>
+		</form>
+		<script>
+			var form = document.querySelector("form");
+			console.log(form.elements[1].type); // Output -> password
+			console.log(form.elements.password.type); // Output -> password
+			console.log(form.elements.name.form == form); // Output -> true
+		</script>
+
+		<!-- Now lets go over text fields -->
+		<textarea id="textfield"></textarea>
+		<script>
+			var textarea = document.querySelector("#textfield"); // Bind textarea to #textfield
+			textarea.addEventListener("keydown", function(event) { // When a key is pressed down, perform event
+				// The key code for F2 is 113
+				if (event.keyCode == 113) {
+					replaceSelection(textarea, "Khasekhemwy"); // Replace the current selection in texarea with "khasekhemwy"
+					event.preventDefault(); // Prevent default behavior of F2 
+				}
+			});
+			function replaceSelection(field, word) { // Replace selection function that takes two arguments
+				var from = field.selectionStart, to = field.selectionEnd;
+				field.value = field.value.slice(0, from) + word + field.value.slice(to);
+				// Put the cursor after the word
+				field.selectionStart = field.selectionEnd = from + word.length;
+			}
+		</script>
+		<input type="text" id="autolength"> length: <span id="length">0</span>
+		<script>
+			// The change event is only fired when it loses focus on the element. So using the "input" event detects any input in that field
+			var text = document.querySelector("#autolength");
+			var output = document.querySelector("#length");
+			text.addEventListener("input", function() { // Everytime input is detected, change the length
+				output.textContent = text.value.length; // Set the textContent of output the the length of text
+			});
+		</script>
+
+		<!-- Now lets cover checkboxes and radio buttons -->
+		<input type="checkbox" id="purple">
+		<label for="purple">Make this page purple</label>
+
+		Color:
+		<input type="radio" name="color" value="mediumpurple"> Purple
+		<input type="radio" name="color" value="lightgreen"> Green
+		<input type="radio" name="color" value="lightblue"> Blue
+		<script>
+			/* The <label> tag is used to associate a piece of text with an input field. Its "for" attribute should refer to the id of
+			the field. Clicking the label will activate the field which focuses it and toggles its value when it is a checkbox or a radio
+			button. */
+			var checkbox = document.querySelector("#purple");
+			checkbox.addEventListener("change", function() { // On change event, perform function
+				document.body.style.background = checkbox.checked ? "mediumpurple" : ""; // If checkbox checked, set color to mediumpurple
+			});
+
+			/* A radio button is similar to a checkbox, but it is linked to other radio bittons with the same "name" attribute. */
+			var buttons = document.getElementsByName("color");
+			function setColor(event) {
+				document.body.style.background = event.target.value;
+			}
+			for (var i = 0; i < buttons.length; i++)
+				buttons[i].addEventListener("change", setColor);
+		</script>
+
+		<!-- Now lets cover select fields -->
+		<select multiple>
+			<option>Pancakes</option>
+			<option>Pudding</option>
+			<option>Ice cream</option>
+		</select>
+		<!-- Using the multiple attribute on the select tag allows for mutiple selections at once. Adding a size attribute to the
+		select tag can be used to set the number of options that are visible at the same time. Each option tag has a value. The value
+		of the option can be defined with a value attribute, but by default the information between the option tags is the value. The
+		value of a select element reflects the currently selected option -->
+		<!-- the following example extracts the selected values from a multiple select field, and uses them to compose a binary number from
+		individual buts. Remember, you can select multiple options by holding control or shift. -->
+		<select multiple id="binExtract">
+			<option value="1">0001</option>
+			<option value="2">0010</option>
+			<option value="4">0100</option>
+			<option value="8">1000</option>
+		</select> = <span id="binOutput">0</span>
+		<script>
+			var bin_select = document.querySelector("#binExtract");
+			var bin_output = document.querySelector("#binOutput");
+			bin_select.addEventListener("change", function() {
+				var number = 0;
+				for (var i = 0; i < bin_select.options.length; i++) {
+					var option = bin_select.options[i];
+					if (option.selected)
+						number += Number(option.value)
+				}
+				bin_output.textContent = number;
+			});
+		</script>
+
+		<!-- Now lets cover file fields -->
+		<input type="file" id="fileType-reader"> <!-- File fields also support the multiple attribute to select multiple files at once -->
+		<script>
+			/* File fields have some other properties besides the other input fields. The "file" property of a file field elemtn is an
+			array-like object (not array) containing the files chosen in the field. Initially its empty. The files property also has its
+			own properties. Object.files.name will return the file name, "size" will return the the file size in bytes, and "type" will
+			return the media type such as text/plain or image/jpeg. And finally the "result" property contains the file's content.
+			*/
+			var fileType_reader = document.querySelector("#fileType-reader");
+			fileType_reader.addEventListener("change", function() {
+				if (fileType_reader.length > 0) {
+					var file = fileType_reader.files[0];
+					console.log("You chose", file.name);
+					if (file.type)
+						console.log("It has type", file.type);
+				}
+			});
+		</script>
+		<input type="file" id="fileRead" multiple>
+		<script>
+			/* Lets create a function to read a text file, and output part of it to the screen */
+			var fileInput = document.querySelector("#fileRead");
+			fileInput.addEventListener("change", function() {
+				Array.prototype.forEach.call(fileInput.files, function(file) {
+					var reader = new FileReader();
+					reader.addEventListener("load", function() {
+						console.log("File", file.name, "starts with", reader.result.slice(0,20));
+					});
+					reader.readAsText(file);
+				});
+			});
+		</script>
+
+		<!-- Now lets go over storing data client-side -->
+		<script>
+			/* Oh fuck yeah, lets go over storing data client-side! Its actually not that hard. You store data locally using the
+			localStorage object. The data will be retained as long as you like until it is explicitely deleted. Everything you see
+			about localStorage can be used in the exact same way when using sessionStorage. The only difference is that with sessionStorage
+			the data stored only retains until the window is browser is closed (refreshes and page restores still conserve the data) */
+			localStorage.setItem("username", "marijn"); // Store item named username, with a value of marijn
+			console.log(localStorage.getItem("username")); // -> Marijn
+			localStorage.removeItem("username"); // Delete the stored data
+			// Seriously thats all there is to it! Now lets build a small note-taking app
+		</script>
+
+		Notes: <select id="list"></select>
+		<button onclick="addNote()">New</button><br>
+		<textarea id="currentnote" style="width: 100%; height: 10em"></textarea>
+		<script>
+			var list = document.querySelector("#list");
+			function addToList(name) {
+				var option = document.createElement("option");
+				option.textContent = name;
+				list.appendChild(option);
+			}
+			// Initialize the lsit from localStorage
+			var notes = JSON.parse(localStorage.getItem("notes")) || {"shopping list": ""};
+			for (var names in notes)
+				if (notes.hasOwnProperty(name))
+					addToList(name);
+
+			function saveToStorage() {
+				localStorage.setItem("notes", JSON.stringify(notes));
+			}
+
+			var current = document.querySelector("#currentnote");
+			current.value = notes[list.value];
+
+			list.addEventListener("change", function() {
+				current.value = notes[list.value];
+			});
+			current.addEventListener("change", function() {
+				notes[list.value] = current.value;
+				saveToStorage();
+			});
+
+			function addNote() {
+				var name = prompt("Note name", "");
+				if (!name) return;
+				if (!notes.hasOwnProperty(name)) {
+					notes[name] = "";
+					addToList(name);
+					saveToStorage();
+				}
+				list.value = name;
+				current.value = notes[name];
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,37 @@
+<!--
+	Chapter 3 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 3 - Functions</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+		function countBs(string) { // Declare function that takes one argument
+			var B_amount = 0; // Create a variable to hold the amount of Bs, which is initally 0.
+			for (var count = 0; count < string.length; count++) { // Initialize count to 0, if count less than charlength of string, increment count and perform loop
+				if (string.charAt(count) == "B") { // If character at string (index "count") is B, then increment the number of B's by 1
+					B_amount++;
+				}
+			}
+			return B_amount; // Return the amount of B's
+		}
+
+		console.log(countBs("BBC"))
+
+
+		// Now do the other function
+		function countChar(string, letter) { // Declare function that takes two arguments
+			var letter_amount = 0; // Create a variable to hold the amount of the letter designated by the "letter" argument
+			for (var count = 0; count < string.length; count++) { // Initialize count to 0, if count less than charlength of string, increment count and perform loop
+				if (string.charAt(count) == letter) { // If character at string (index "count") is equal to letter argument, then increment letter_amount by 1
+					letter_amount++;
+				}
+			}
+			return letter_amount; // Return the amount of letters passed in the second argument
+		}
+		console.log(countChar("kakkerlakkkkkkkkk", "k"));
+		</script>
+	</body>
+</html>

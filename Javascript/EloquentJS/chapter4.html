@@ -1,0 +1,293 @@
+<!--
+	I'm now in Chapter 4. Holy hell this guide is amazing. Its only Chapter 4...There are 20 chapters.
+
+	This section covers Objects and Arrays!
+-->
+<html>
+	<head>
+		<title>Chapter 4 - Objects and Arrays</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			// So lets begin by creating an array/data set
+			var listOfNumbers = [2, 3, 5, 7, 11];
+			console.log(listOfNumbers); // Output all the elements declared in the array
+			console.log(listOfNumbers[1]); // Output the second element. *Remember, 0 counts as an index.
+			console.log(listOfNumbers[1-1]); //Output the first element, because it calculates to index 0.
+			console.log(listOfNumbers.length); // Output the number of elements in the array
+
+			/* Now lets go over properties! Remember some of these:
+
+			x.length, x.max -> These are properties that the variable can have. Only null doesn't have any properties.
+			You can use either a value.x and value[x] to access a property on value, but they may not necassarily be the
+			same property. The difference is that theres a ".", the property must be a variable name, while the property
+			within brackets can be evaluated. Elements of an array are stored in properties. We can use array.length to
+			figure out how many elements are in an array, similar to the way it finds how many characters are in a string.
+			According to the rules above, you can write it as array["length"], but thats unneccessary in this case.
+			*/
+
+			// Now lets cover methods
+			/* Both strings and array obects contain not only the length property, but a number of different methods as
+				well. Here is an example below */
+			var doh = "Doh";
+			console.log(typeof doh.toUpperCase); // Should output (function)
+			console.log(doh.toUpperCase()); // Should output DOH
+
+			/* Properties that contain functions are called "methods" of the value they belong, so its a method of "doh".
+				Every string object has toUpperCase and toLowerCase methods, and a host of other different properties
+			*/
+			// Now lets cover some different methods that can be used with array objects
+			var collection = [];
+			collection.push("Mack"); // The push method adds an element into the array in sequential order
+			collection.push("the", "Knife");
+			console.log(collection); // Output should be -> ["Mack", "the", "Knife"]
+			console.log(collection.join(" ")); // Join determines the text that is glues between an array's elements.
+											   // So the output should be -> Mack the Knife
+			console.log(collection.pop()); // Pop removes the value at the end of the array, and returns it, so the output should be -> Knife
+			console.log(collection); // Output the remaining array, which should be -> ["Mack", "the"]
+
+			// Now lets cover objects!
+			/* Objects contain arbitrary collections of properties. We can add and remove properties as necassary. */
+			// Here is a small example
+			var david = {
+				graduate: false,
+				age: 22,
+				school: "FAU",
+				skills: ["Programming", "Music", "Audio Production"]
+			}; // Observe the syntax of declaring an object
+			console.log("David Cardoso's Education Profile:")
+			console.log("Age: " + david.age); // Output age property of "david" object. Which should be -> 22
+			console.log("Currently attending " + david.school);
+			console.log("Has skills in " + david.skills.join(" ")); // Remove the default array formatting using join
+			console.log("Graduate?: " + david.graduate);
+
+			david.graduate = true; // Change the property "graduate" on the "david" object
+			console.log("Graduate error...Refreshing info status: " + david.graduate); //Print updated "graduate" property
+			/* So its pretty simple. Remember when reading a property that doesn't exist, the value is undefined.
+				You can both create or assign a value to a property using an "=" sign. So doing for example:
+				var david.weight = 250; would create a new property weight, and set it to 250!
+
+				Now lets delete a property from the "david" object */
+			delete david.age; // Delete the age property from the "david" object
+			console.log(david.age); // It should now output undefined because the property has been deleted
+			console.log("graduate" in david); // the "in" operator returns a boolean value to indicate if an object has a property. Output should be -> true
+			console.log("age" in david); // Output should be -> false
+
+			// So arrays are then objects specialized for storing sequences of data.
+			console.log(typeof [1, 2]); // Get typeof a small array, it should output -> object
+			/* So that means the "david" object is basically an array of objects and can be represented like so:
+
+				var david = [{graduate: false}, {age: 22}, {school: "FAU"}, {skills: ["Programming", "Music", "Audio Production"]}];
+
+				But thats not very pleasant to write out or understand
+			*/
+
+			// Now lets cover Mutability
+			/* In the earlier chapters, I covered data types such as numbers, strings, and booleans; these are immutable. Its not possible
+				to change the value of those types. But with objects, it is possible to change the existing values of those types. */
+			// Heres an example:
+			var object1 = {value: 10}; // Set the "value" attribute of object1 to 10
+			var object2 = object1; // Make object2 inherit the values and properties of object1
+			var object3 = {value: 10}; // Set the "value" attribute of object3 to 10
+			console.log(object1 == object2); // -> true 
+			console.log(object1 == object3); // -> false - because object3 although has the same contents as object1, it hasn't been explicitly declared equal like object2
+			object1.value = 15; // Set the value attribute of object1 to 15
+			console.log(object2.value); // Since object2 is connected to object1, it will output -> 15
+			console.log(object3.value); // Since object3 is seperate and it has its own value attribute, it will output -> 10
+
+			// Now lets cover the concept called "Lycanthrope's Log" which creates a small environment to keep entries of data
+			var journal = [];
+
+			function addEntry(classes, graduate) { // Create a function to log the classes taken, and the graduation status as a boolean value!
+				journal.push({ // Push to the journal object some data
+					schedule: classes, // For the schedule property, push a sequence of classes given in the argument
+					status: graduate // For the status property, push a boolean value of the graduate parameter, that indicates if you graduated or not
+				});
+			}
+			// Now use the function to add some entries
+			addEntry(["Art Appreciation", "English", "Biology", "English"], false);
+			addEntry(["English", "Geography", "College Algebra", "Public Speaking"], false);
+			addEntry(["Trigonometry", "Intro to C", "Foundations", "Pre-Calculus"], true); // The idea is to find a correlation with the data entered.
+			/* A little math here to cover. Correlation is a measure of the dependence between variables and can be expressed from ranges -1, to 1.
+				1 means that the variables are perfectly correlating, 0 means that the variables have no correlation, and -1 means that they are
+				correlating but are opposites.
+			*/
+
+			// Now lets actually calculate correlation!
+			function phi(table) {
+				return (table[3] * table[0] - table[2] * table[1]) / 
+					Math.sqrt((table[2] + table[3]) *
+							  (table[0] + table[1]) *
+							  (table[1] + table[3]) *
+							  (table[0] + table[2]));
+			} // This is the actual programmatic representation of the correlation formula (LOOK IT UP)
+			console.log(phi([76, 9, 4, 1])); // Calculates exact correlation from the ranges -1 to 1. Output should be -> 0.068599434
+
+			/* Now lets go back to the journal keeping function we made, aand extract a 2x2 table for a specific class in the journal, and
+			   tally up how many times the event occurs in relation to graduation status */
+			function hasClass(schedule, entry) { // Create a function hasClass that takes two variables and tests whether an entry contains a given college class
+				return entry.schedule.indexOf(schedule) != -1; /* indexOf method finds a given value in the array(in this case the class name) and returns the index 
+																	which it was found, or returns -1 if it wasn't found. So in this case, only return the index if found. 
+																*/
+			}
+
+			function tableFor(classes, journal) { // Create a function tableFor that figures out which box in the table each journal entry falls intro by the specific class
+				var table = [0, 0, 0, 0]; // Create a table to hold the correlations, this will be out 2x2 table
+				for (var i = 0; i < journal.length; i++) { // Set i to 0, while i < # of journal entry items, increment and perform the loop
+					var entry = journal[i], index = 0; // Set entry to journal[i for index number] array, set index to 0
+					if (hasClass(classes, entry)) index += 1; // If hasclass the argument, add 1 to the index
+					if (entry.status) index += 2; // If entry.status true, add 2 to index
+					table[index] += 1; // Move to the indicated index, add 1 into the array
+				}
+				return table; // Return the processed table
+			} // [*VOMITS]
+
+			console.log(tableFor("English", journal)); // Output the correlations of the "English" class from the journal object
+			/* Okay going to be honest, I typed this section out to hopefully understand it, but I still don't get it. Hopefully later I'll understand it. */
+
+			// Now lets see how we can use objects as maps (whatever the hell that means)
+			/* In the previous section, you saw how difficult it was to find correlations for a given college class. You have to loop the array to find the object
+				with the right name. We wrapped it into a function, but it was still alot of code. A better way to do this is to use the object properties named
+				after the college class types. You can use [] square bracket access notation to create and read properties and you can use the "in" operator to test
+				whether a given property exists */
+
+			var map = {}; // Create an empty object
+			function storePhi(classes, phi) { // Create a function to store the correlation measure into the map object
+				map[classes] = phi;
+			} 
+			storePhi("English", 0.5); // I have no idea why you would want to do this
+			storePhi("Art Appreciation", 0.24);
+			console.log("English" in map); // Okay I can see why checking if an object exists in an array can be useful. Output should be -> true
+			console.log(map["English"]); // Oh okay. This is very useful, just outputting the value of the element inside the array. Output should be -> 0.5
+
+			// Now what if you wanted to find all the events for which we have stored a coefficient. You can use a special loop construct for going over object properties
+			for (var classes in map) {
+				console.log("The correlation for '" + classes + "' is " + map[classes]);
+			} /* Output should show -> The correlation for 'English' is 0.5
+								   	   The correlation for 'Art Appreciation' is 0.24 */
+
+			// Now lets do a final analysis of all the correlations
+			/* Okay fix this later, this shit is too hard and came out wrong and isn't working
+			function gatherCorrelations(journal) {
+				var phis = {};
+				for (var entry = 0; entry < journal.length; entry++) {
+					var events = journal[entry].schedule;
+					for (var i = 0; i < classes.length; i++) {
+						var schedule_class = classes[i];
+						if (!(classes in phis)) {
+							phis[classes] = phi(tableFor(schedule_class, journal));
+						}
+					}
+				}
+				return phis;
+			}
+			var correlations = gatherCorrelations(journal);
+			console.log(correlations.English);
+			*/
+
+			// Now lets continue with more arrayology with an extremely useful section
+			/* Lets made a simple todoList. Remember that the push method adds a value at the end of the array and the pop method removes the last array item
+				and returns it. Now there are two new ones, shift and unshift. "shift" method removes the element at the zero index and shifts the values down
+				consecutively, returning then the removed value. "unshift" adds one or more elements to the beginning of the array, and returns the new length of 
+				the array */
+
+			var todoList = [];
+			function rememberTo(task) {
+				todoList.push(task); // rememberTo adds to-do list items at the end of the stack
+			}
+			function whatIsNext() {
+				return todoList.shift();
+			} // whatIsNext removes the first item from the stack and returns it to the console
+			function urgentlyRememberTo(task) {
+				todoList.unshift(task);
+			} // urgentlyRememberTo adds a new to-do list item to the top of the stack
+
+			// Lets use it a bit!
+			rememberTo("Do the dishes"); // Add "do the dishes"
+			rememberTo("Walk the dog"); // Add "walk the dog" below the previous entry
+			rememberTo("Clean car"); // Add "clean the car" below previous entry. Output at this point should be -> ["Do the dishes", "Walk the dog", "Clean the car"]
+			urgentlyRememberTo("Pay for car"); // Add "pay for car" at top of array
+			urgentlyRememberTo("Pay for college");// Add "pay for college" at top. Output -> ["Pay for college", "Pay for car", "Do the dishes", "Walk the dog", "Clean the car"]
+			whatIsNext(); // Remove the top item, so output should now be -> ["Pay for car", "Do the dishes", "Walk the dog", "Clean the car"]
+			console.log(todoList);
+
+			// Lets cover some more array methods
+			console.log([1, 2, 3, 2, 5].indexOf(2)); // Return the index of the item 2, output should be -> 1
+			console.log([1, 2, 3, 2, 5].lastIndexOf(2)); // Return the index of the last occured instance of the item 2, output should be -> 3
+			console.log([1, 2, 3, 4, 5].slice(2, 4)); // Return any elements between indices 2 and 4, which is -> 3, 4
+			console.log([1, 2, 3, 4, 5].slice(2)); // If no second argument is given to slice, it will give all elements past the index 2, output should be -> 3, 4, 5
+			console.log([1, 2].concat([3, 4, 5])); // Concat glues arrays together like "+" on strings. Output should be -> 1, 2, 3, 4, 5
+			// The following uses both concat and slice. Concat is used to glue arrays together, just like the "+" operator does for strings
+			function remove(array, index) {
+				return array.slice(0, index).concat(array.slice(index + 1)); // Return array sliced from 0 to index, and concat(glue) the array sliced from index + 1 and beyond
+				// So it glues like this basically >> array.slice [0 - 3].concat[(3+1) - 5] (using 3 as an example index)
+			}
+			console.log(remove(["a", "b", "c", "d", "e"], 2)); // Pass a table in, remove the letter from index 2, which should be c, output should be -> ["a", "b", "d", "e"]
+
+			// Now lets go over strings and their properties!
+			/* We can read properties like length and toUpperCase from strings. But you can't add a new property. Example: */
+			var myString = "Fido";
+			myString.myProperty = "value";
+			console.log(myString.myProperty); // Will return -> undefined
+			/* Values of type string, number, and boolean are not objects. Although Javascript won't throw an error if you try to set new properties on them, nothing is actually stored.
+				These values are immutable and cannot be changed. But these types have built-in properties. Every string has a number of methods. The most useful are probably slice and
+				indexOf which are the same array methods of the same name. */
+			console.log("coconuts".slice(4, 7)); // Should return -> nut
+			console.log("coconut".indexOf("u")); // Should return -> 5. Works exactly the same as an array.
+			// One difference is that a string's indexOf can take a string containing more than one character, like so:
+			console.log("one two three".indexOf("ee")); // Should return -> 11
+			// Using trim() removes white spaces (newlines, spaces, tabs, etc.) from the start to the end of a string
+			console.log("   Okay  \n ".trim()); // Should return -> Okay.
+			var testString = "abc";
+			console.log(testString.length); // Returns the length of the string. Which is -> 3
+			console.log(testString.charAt(0)); // Returns the character at index 0, which is -> a
+			console.log(testString[1]); // You can also do it like an array, so this should return -> b
+
+			// Now lets go over the Arguments object
+			/* Whenever a function is called, a special variable named arguments is added to the environment in which the function body runs. This variable refers to an object
+				that holds all of the arguments passed to the function. Remember that in Javascript, your allowed to pass in more or fewer arguments than the function declares
+				itself. The arguments object has a length property which tells us the number of arguments that were passed to the function. It also has a property for each
+				argument, named 0, 1, 2, and so on. Its alot like an array, but the only difference is that it doesn't have array methods like slice and indexOf. So its a little
+				more difficult to use.
+
+				Lets look at an example
+			*/
+			function argumentCounter() {
+				console.log("You gave me", arguments.length, "arguments."); // Return the number of arguments given to the function
+			}
+			argumentCounter("1st", "2nd arg", "3rd param", "Sausage param"); // Output should be -> You gave me 4 arguments.
+			// Remember the addEntry function? lets make an easier to use version of it!
+			function addEntry_2(param) { // Create a function addEntry_2 that takes one argument
+				var entry = {schedule: [], status: param }; // Create the object entry, which has an empty schedule property and status indicated by the first argument passed
+				for (var i = 1; i < arguments.length; i++) // Set i to 1 (to skip over first argument), while i < arguments.length, increment i and perform loop
+					entry.schedule.push(arguments[i]); // for the schedule property in entry object, push data from arguments array by the index i
+				journal.push(entry); // Push into the journal object, the entry object
+			}
+			addEntry_2(true, "English", "Calculus", "Discrete Mathematics", "Crying"); // Alot easier to use, and can take any number of arguments!
+			console.log(journal); // Output onto console. Very cool, chrome lets you interactively examine the objects within the journal object like a tree diagram!
+
+			// Now lets go over the math object
+			/* The math object contains tons of different and important ways for you to use mathematics in your programs. It contains tons of methods to perform operations
+				such as sqr, sin, cos, tan, acos, asin, atan, PI, random, and lot more stuff. Lets try it out: */
+			function randomPointOnCircle(radius) {
+				var angle = Math.random() * 2 * Math.PI;
+				return {x: radius * Math.cos(angle),
+						y: radius * Math.sin(angle)};
+			}
+			console.log(randomPointOnCircle(2)); // Should return a random x, and y coordinate on a circle
+			console.log(Math.random()); // the Random method for the math object returns any random number between 0 and 1!
+			console.log(Math.floor(Math.random() * 10)); // Math.floor rounds down to the nearest whole number, Math.random * 10 returns a digit in the 1 - 10 range
+			console.log(Math.ceil(Math.random() * 10)); // Math.ceil rounds up to the nearest whole number
+			console.log(Math.round(Math.random() * 10)); // Math.round rounds to the nearest number
+
+			// Now lastly, lets cover the global object
+			/* The global scope, the space in which a global variable lived in, can also be approached as an object *(mind blown). Each global variable is present as a property
+				of this object. In browsers, the global scope object is stored in the window variable. */
+			var myVar = 10;
+			console.log("myVar" in window); // Should return true since myVar is indeed in the global scope (window)
+			console.log(window.myVar); // Should return -> 10
+
+		</script>
+	</body>
+</html>

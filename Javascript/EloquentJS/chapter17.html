@@ -1,0 +1,158 @@
+<!--
+	This section is about using get methods. Useful for server operations!
+
+	This section covers HTTP (Hypertext Transfer Protocol)!
+-->
+<html>
+	<head>
+		<title>Chapter 17 - HTTP</title>
+	</head>
+	<body>
+		<script>
+			/* Lets quickly go over HTTP methods, and basic info. When you type the URL of a website or document
+			in your browser, it tries to open a TCP connection on port 80 (which is the default port for HTTP
+			traffic). If the server exists and accepts a connction, the browser sends something like this:
+
+				GET /17_http.html HTTP/1.1
+				Host: eloquentjavascript.net
+				User-Agent: Your browser's name
+
+				// Then the server responds through that same connection...
+
+				HTTP/1.1 200 OK
+				Content-Length: 65585
+				Content-Type: text/html
+				Last-Modified: Wed, 09 Apr 2014 10:48:09 GMT
+
+				<!doctype html>
+				...rest of document
+
+			The information sent by the client is called a request, and is the first line "GET /17...".
+			"GET" is the method of the request. Get means that we want to get the specified source. Other
+			common methods are DELETE to delete a resource, PUT to replace it, and POST to send information
+			to it. Remember, the server is not obliged to carry out every request.
+
+			Then it will start with a version of the HTTP protocol "HTTP/1.1 200 OK" followed by a three-digit
+			status code. Status codes that begin with a 2 indicate a successful operation, Codes starting with a
+			4 indicate something went wrong with the request (404 for example indicates the file was not found).
+			An error code beginning with 5 means an error occured on the server, and the request is not to blame.
+
+			Then afterwards, information about the document is passed such as the size of the HTML document as 
+			"Content-Length" in bytes, when it was last modified, type, etc.
+			*/
+		</script>
+
+		<!-- Now lets create a form to dissect the HTTP request -->
+		<form method="GET" action="chapter17.html">
+			<p>Name: <input type="text" name="name"></p>
+			<p>Message:<br><textarea name="message"></textarea></p>
+			<p><button type="submit">Send</button></p>
+		</form>
+		<!-- So now lets dissect the request and how it was made. You created a form that sends a GET request
+			to the chapter17.html file, which is the current page. The code then associates with the form
+			two input fields (a regular input field, and a text area), gives them a name for the request, etc.
+			Then when you click the send button, the information is then encoded into a query string. That query
+			string is tacked onto the action URL, and the browser makes a GET request to that URL.
+
+			GET ..(filelocation)/chapter17.html?name=David+Cardoso&message=Hello
+
+			You can actually see the method being passed along the URL! The form data is easily passed through.
+			But of course lets further dissect it. The start of a query string is indicated by a question mark.
+			After that, the corresponding attributes are added along with their values, and seperated by an
+			ampersand (&).
+		-->
+		<script>
+			/* Everything has a format, and URL encoding is no different. It uses % symbols for escape 
+			sequences, etc. You can do this easily in Javascript */
+			console.log(encodeURIComponent("Hello & Goodbye")); // Output -> Hello%20%26%20goodbye
+			console.log(decodeURIComponent("Hello%20%26%20goodbye")); // Output -> Hello & goodbye
+
+			/* More about the different HTTP methods. By convention, the GET method is used for requests that do
+			not have side effects to the server, such as doing a search. Requests that change something on the server such as creating a new account or posting a message, you should use POST. */
+
+			// Now lets cover XMLHTTPRequest, and making a request to some data
+			/* XMLHTTPRequest, is used to parse response documents as XML. It can do things such as show a list
+			of results calculated while the user is still typing in the search without reloading the page. So
+			lets make a simple request, by creating a request object with XMLHttpRequest constructor and call
+			its open and send methods: */
+			var req = new XMLHttpRequest(); // Create an XMLHttpRequest object
+			req.open("GET", "chapter17_xmlData.txt", false); 
+			/* Use the open method on req object, using the GET HTTP method on the text file "chapter17_xmlData.txt", and the last argument is async. So if its false, it will only perform more HTTP operations when the open request is completed */
+			req.send(null); // Then after opening the request, we send it with the "send" method. For GET requests, we can use null.
+			console.log(req.responseText); // Then send the reponse text recieved
+			console.log(req.status, req.statusText); // Output -> 200 OK
+			console.log(req.getResponseHeader("content-type")); // Output -> text/plain
+			/* Your going to get errors on XMLHttpRequest because your trying to pull XML data from a file:// and not using an actual
+			HTTP server so there you can't make HTTP requests. But I'm typing up everything anyway
+
+			// Now lets cover asynchronous requests */
+			/* From the last section, you noticed that the open method for an XMLHttpRequest object has a third argument that is boolean
+			that indicates whether the request is asynchronous. If its set to be asynchronous, that means that when we call send, the only
+			thing that happens right away is that the request is scheduled to be sent. Our program can continue and the browser will
+			take care of sending and recieving data in the background. But as long as the request is running, we won't be able to access
+			the response. We need a mechanism that will notify us when the data us available, by listening to a "load" event. */
+			var req = new XMLHttpRequest(); // Create an XMLHttpRequest object
+			req.open("GET", "chapter17_xmlData.txt", true); // Open a request to get data from the chapter17_xmlData.txt asyncronously
+			req.addEventListener("load", function() { // When the request is completed or "loads" perform event
+				console.log("Done:", req.status);	// Output -> Done: 200
+			});
+			req.send(null); // Send the reponse
+
+			// Now lets go over fetching XML data
+			/* When the resource is retrieved by an XMLHttpRequest object is an XML document, the object's responseXML property will
+			hold a parsed representation of the document. The object that responsiveXML document property holds corresponds to the document
+			object. Its documentElement property refers to the outer tag of the XML document. The XML data for fruits is layed out as such:
+
+			<fruits>
+				<fruit name="banana" color="yellow"/>
+				<fruit name="lemon" color="yellow"/>
+				<fruit name="cherry" color="red"/>
+			</fruits>
+
+			We can retrieve it like this: */
+			var req = new XMLHttpRequest();
+			req.open("GET", "chapter17_xmlData.xml", false);
+			req.send(null);
+			console.log(req.responseXML.querySelectorAll("fruit").length); // Should output -> 3
+			//But its often a better idea to communicate using JSON data
+			var req = new XMLHttpRequest();
+			req.open("GET", "chapter17_xmlData.json", false);
+			req.send(null);
+			console.log(JSON.parse(req.responseText)); // Output -> {banana: "yellow", lemon: "yellow", cherry: "red"}
+
+			// Now lets go over abstracting a request
+			function backgroundReadFile(url, callback) {
+				var req = new XMLHttpRequest();
+				req.open("GET", url, true);
+				req.addEventListener("load", function() {
+					if (req.status < 400)
+						callback(req.responseText);
+				});
+				req.send(null);
+			}
+
+			function getURL(url, callback) {
+				var req = new XMLHttpRequest();
+				req.open("GET", url, true);
+				req.addEventListener("load", function() {
+					if (req.status < 400)
+						callback(req.responseText);
+					else
+						callback(null, new Error("Request failed: " + req.statusText));
+				});
+				req.addEventListener("error", function() {
+					callback(null, new Error("Network error"))
+				});
+				req.send(null);
+			}
+			getURL("data.nonsense.txt", function(content, error) {
+				if (error != null)
+					console.log("Failed to detch nonsense.txt: " + error);
+				else
+					console.log("nonsense.txt: " + content);
+			});
+
+			// Cover promises later!
+		</script>
+	</body>
+</html>

@@ -1,0 +1,86 @@
+<!--
+	Chapter 13 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 13 - The Document Object Model</title>
+	</head>
+	<body>
+		<!-- I never add inline styles, but the book insists -->
+		<style>
+		  /* Defines a cleaner look for tables */
+		  table  { border-collapse: collapse; }
+		  td, th { border: 1px solid black; padding: 3px 8px; }
+		  th     { text-align: left; }
+		</style>
+		<!-- Table goes here -->
+		<!-- Script goes below here! -->
+		<script>
+			var MOUNTAINS = [
+			  {name: "Kilimanjaro", height: 5895, country: "Tanzania"},
+			  {name: "Everest", height: 8848, country: "Nepal"},
+			  {name: "Mount Fuji", height: 3776, country: "Japan"},
+			  {name: "Mont Blanc", height: 4808, country: "Italy/France"},
+			  {name: "Vaalserberg", height: 323, country: "Netherlands"},
+			  {name: "Denali", height: 6168, country: "United States"},
+			  {name: "Popocatepetl", height: 5465, country: "Mexico"}
+			];
+
+			/* Use the sytax of a table to know how to build one:
+			<table>
+				<tbody>
+					<tr>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+			*/
+			function buildTable(data) {
+				// First create the table and table body!
+				var table = document.createElement("table");
+				var table_body = document.createElement("tbody");
+				// Append table body to table
+				table.appendChild(table_body);
+				// Create a header row
+				var header_row = document.createElement("tr");
+				// Append header row to table body
+				table_body.appendChild(header_row);
+				// Create the table header first!
+				for (z = 0; z < Object.keys(data).length / 3; z++) { // Divide by 3 to get the property's by odd number only!
+					var table_header = document.createElement("th"); // Create one table header
+					var header = document.createTextNode(Object.keys(data[0])[z]); // This array almost had me in tears haha
+					header_row.appendChild(table_header); // Append table header to header row
+					table_header.appendChild(header); // Append header text to table header
+				}
+
+				// Now create rows for each element in the MOUNTAINS array!
+				for (x = 0; x < data.length; x++) {
+					// For each element in the argument passed, create a row, and append the row to the table body
+					var row = document.createElement("tr");
+					table_body.appendChild(row);
+
+					// Now create a for loop to go through the data
+					for (i = 0; i < Object.keys(data).length / 3; i++) { // Divide by 2 to get the value of the property's
+						// Create cells for each value found and append to the table row!
+						var cell = document.createElement("td");
+						row.appendChild(cell);
+						// Now create text nodes of the cell data, and append to cells
+						var cell_data = document.createTextNode(Object.keys(data[i])[i]);
+						// And append the data to the cell
+						cell.appendChild(cell_data);
+					}
+				}
+				
+				return table;
+			}
+
+			document.body.appendChild(buildTable(MOUNTAINS));
+
+			/* Almost got it. I'll come back to it later! My solution is not even close to being similar to Eloquent Javascript's version.
+			Mine is actually harder to understand haha. But I get the idea. I want to move on to the next section */
+		</script>
+	</body>
+</html>

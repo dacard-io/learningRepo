@@ -1,0 +1,22 @@
+{
+  "name": "eggheadTutorial",
+  "version": "1.0.0",
+  "description": "Tutorial for Express.js by Egghead",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "David Cardoso",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {
+    "consolidate": "^0.14.0",
+    "fs": "0.0.2",
+    "handlebars": "^4.0.5",
+    "lodash": "^4.6.1",
+    "nodemon": "^1.9.1"
+  }
+}

@@ -1,0 +1,262 @@
+<!--
+	This section covers more about regular expressions and calculations!
+	Regular expressions are a way to describe patterns in string data! So
+	this is pretty major!
+
+	Regular expressions can actually be used to for example replace all newline characters
+	pretty easily in a string, or parse data from a file, etc. This section will help make
+	sense of alot of things, even though its kinda boring!
+-->
+<html>
+	<head>
+		<title>Chapter 9 - Regular Expressions</title>
+	</head>
+	<body>
+		<!-- /* Now to conclude this chapter, here is a quick overview of regular expression syntax:
+
+			
+			/abc/	A sequence of characters
+			/[abc]/	Any character from a set of characters
+			/[^abc]/	Any character not in a set of characters
+			/[0-9]/	Any character in a range of characters
+			/x+/	One or more occurrences of the pattern x
+			/x+?/	One or more occurrences, nongreedy
+			/x*/	Zero or more occurrences
+			/x?/	Zero or one occurrence
+			/x{2,4}/	Between two and four occurrences
+			/(abc)/	A group
+			/a|b|c/	Any one of several patterns
+			/\d/	Any digit character
+			/\w/	An alphanumeric character (“word character”)
+			/\s/	Any whitespace character
+			/./	Any character except newlines
+			/\b/	A word boundary
+			/^/	Start of input
+			/$/	End of input
+
+		-->
+		<!-- Script goes below here! -->
+		<script>
+			// So lets go over creating a regular expression
+			/* A regular expression is a type of object created with a RegExp constructor or as a literal value by enclosing forward slashes "/" */
+			var re1 = new RegExp("abc");
+			var re2 = /abc/; //
+			var eighteenPlus = /eighteen\+/; // Remember, operators, symbols, etc. have different meanings in regular expressions. So add a back slash to imply no meaning
+
+			// Now lets test for matches
+			/* Regular expressions have another of methods. Lets start with using test! */
+			console.log(/abc/.test("abcde")); // Should output as -> true - because the string contains a match of the pattern in the expression
+			console.log(/abc/.test("abxde")); // Should output as -> false
+
+			// Now lets match a set of characters
+			/* Finding out whether a string contains "abc" can be done with a call to indexOf. But regular expressions allow us to go beyond that and express more
+			complicated patterns. Both of the following expressions match all strings that contain a digit */
+			console.log(/[0123456789]/.test("in 1992")); // Should output as -> true because there numbers matching in the pattern
+			console.log(/[0-9]/.test("in 1992")); // Also should output as -> true
+			/* Within square brackets, a dash (-) between two characters can be used to indicate a range of characters, where the ordering is determined by the
+			characters unicode number. Characters 0-9 sit next to each other on the unicode chart (codes 48-57). Heres a list of shortcuts you can use instead of
+			typing [0-9] or [a-c]
+
+			\d = Any digit -> so you could use \d instead of [0-9]
+			\w = Any alphanumeric character (Letters and numbers)
+			\W = Any nonalphanumeric character (Symbols, no letters or numbers)
+			\s = Any whitespace character (spaces, newline, etc.)
+			\D = Any character that is not a number
+			\S = Any nonwhitespace character (Letters, numbers, and symbols)
+			. = Any character except for \n
+
+			Heres another example of using shortcuts
+			*/
+			var dateTime = /\d\d-\d\d-\d\d\d\d/; // It tends to not look very pretty to write, but we'll cover making it nicer to read later!
+			console.log(dateTime.test("11-12-1993")); // Should output as -> true
+			console.log(dateTime.test("November-12-1993")); // Should output as -> false
+			/* To invert a set of characters, as in to express that you want to match any character EXCEPT the ones in the set, use a caret (^) */
+			var notBinary = /[^01]/;
+			console.log(notBinary.test("1100100")); // Should output -> false, because we are looking for any characters except the indicated in the set
+			console.log(notBinary.test("1100230")); // Should output -> true, because a 2 and 3 which are not included in the set are being passed
+
+			// Now lets go over repeating parts of a pattern
+			/* We know how to match a single digits and letters, what about matching a whole sequence of numbers or letters? When you put a plus sign after something
+			in a regular expression, it indicates that the element may be repeated more than once. Thus /\d+/ matches one or more digit characters */
+			console.log(/'\d+'/.test("'123'")); // Should output -> true since more than one number is showing up
+			console.log(/'\d+'/.test("''")); // Should return -> false since nothing was found
+			console.log(/'\d*'/.test("'123")); // Should return -> true // the asterisk* is similar to + except it also allows the pattern to match 0 times.
+			// a question mark ? makes part of a pattern optional, meaning it may occur zero or one time. Here is an example
+			var neighbor = /neighbou?r/; // The ? makes the "u" letter optional when checking for matches
+			console.log(neighbor.test("neighbour")); // Should return as -> true
+			console.log(neighbor.test("neighbor")); // Should return as -> true
+			/* To indicate that a pattern should occur multiple times, use {} curly braces. Putting a {4} requires the pattern to occur exactly 4 times to be true,
+			and when specifying a range in this notation {2, 4}, it means the element must occur at least twice, and at most four times. And using {5, } indicates
+			to match if pattern detected 5 or more times. Check the example: */
+			var dateTime = /\d{1,2}-\d{1,2}-\d{4}/; // Allow either 1-2 digits for the month, same with day, and only four digits for the year
+			console.log(dateTime.test("11-12-1993")); // Output should be -> true
+			console.log(dateTime.test("11-12-93")); // Output should be -> false
+
+			// Now lets cover grouping subexpressions
+			/* You can use an operator like * or + on more than one element at a time by using parentheses */
+			var CartoonCrying = /boo+(hoo+)+/i;
+			console.log(CartoonCrying.test("Boohoohoo")); // Output should be -> true
+			/* So the regular expression indicates to find the patterns boo and hoo. The first and second + characters only apply to the second o in boo and hoo,
+			and the third applies to the whole group to also include the last "o". The "i" at the end of the sequence indicates that the expression is case
+			insensitive, so when testing the capital B still matches with the regular expression! */
+
+			// Now lets cover matches and groups
+			/* Now the test method is great and all, but its use is only limited to a boolean return value. Regular expressions also have an "execute" method that
+			will return null if no match is found, and return an object with information about the match otherwise! */
+			var match = /\d+/.exec("one two 100");
+			console.log(match); // Should output the element -> ["100"]
+			console.log(match.index); // Should output the location in the string where the string successfully matches -> 8
+			// The match method behaves similarly
+			console.log("one two 100".match(/\d+/)); // Should output ["100"]
+			/* When a regular expression contains a subexpression grouped with parentheses, the text that matched those groups will also show up in the array.
+			The whole match is always the first element, the next element is the part matched by the first group, and then second group then so on. */
+			var quotedText = /'([^']*)'/;
+			console.log(quotedText.exec("she said 'hello'")); // -> ["'hello'", "hello"]
+			/* When a group is not matched at all, it returns in the array as undefined */
+
+			// Now lets go over the date type
+			/* Javascript has a standard object for representing dates, or rather poins in time called Date. You can use it to get the current date and time! */
+			console.log(new Date()); // -> the current date and time
+			// You can also create a date object with specific times
+			console.log(new Date(2009, 11, 9)); // Should output -> Wed Dec 09 2009 00:00:00
+			console.log(new Date(2009, 11, 9, 12, 59, 59, 999)); // Should output -> Wed Dec 09 2009 12:59:59
+			// You can then use the getTime method on the date object that returns a number
+			console.log(new Date(2013, 11, 19).getTime()); // Should return the date in milliseconds haha -> 1387429200000
+			console.log(new Date(1387429200000)); // Should return -> Thu Dec 19 2013 00:00:00
+			/* The Date objects provides for methods like getFullYear, getMonth, getDate, getHours, getMinutes, and getSeconds, and getYear(returns two digits like 93)
+			so now lets create a date object from a string */
+			function findDate(string) {
+				var dateTime = /(\d{1,2})-(\d{1,2})-(\d{4})/;
+				var match = dateTime.exec(string);
+				return new Date(Number(match[3])),
+							   (Number(match[2])) - 1,
+							   (Number(match[1]));
+			}
+			console.log(findDate("30-1-2003")); /* Okay this part isn't working properly, come back to it later! */
+
+			// Now lets cover Word and String Boundaries
+			/* Sometimes we need to enforce that a match must span part or the whole string. We can add ^ and $ markerts. The caret ^ matches the start of the input
+			string, while the $ matches the end. So /^\d+$/ matches a string consisting entirely of one or more digits, /^!/ matches any string that starts with an
+			exclamation mark, and /x^/ does not match any string since there cannot be an x before the start of a string. We can also use \b to set a word boundary,
+			where a word boundary can be the start or end of the string or any pint in the string that has a work character on one side and a nonword character on the
+			other */
+			console.log(/cat/.test("concatenate")); // Should output -> true
+			console.log(/\bcat\b/.test("concatenate")); // Should output -> false
+
+			// Now lets cover choice patterns
+			/* Say we want to know whether a piece of text contains not only a number but a number by one of the words pig, cow, or chicken, or any of its plural forms,
+			you can use the pipe character (|) to do this */
+			var animalCount = /\b\d+ (pig|cow|chicken)s?\b/;
+			console.log(animalCount.test("15 pigs")); // Should output -> true
+			console.log(animalCount.test("15 pigchickens")); // Should output -> false
+
+			// Now lets cover the replace method
+			/* Replace does exactly what you think, and replaces matched parts of a given string with another string */
+			console.log("papa".replace("p", "m")); // Should output -> mapa
+			// You can use the "g" option (for global) for all matches to be replaced, not just the first match
+			console.log("Borobudur".replace(/[ou]/, "a")); // Should output -> Barobudar
+			console.log("Borobudur".replace(/[ou]/g, "a")); // Should output -> Barabadar
+			/* How about taking a list of names, and organizing them into First Name, Last Name format? */
+			console.log("Hopper, Grace\nMcCarthy, John\nRitchie, Dennis".replace(/([\w]+), ([\w]+)/g, "$2 $1")); // Output -> Grace Hopper John McCarthy ...etc.
+			/* So okay alot of this is understandable, but what about the $2 and $1 argument? The $1 and $2 in the replacement string refers to the parenthesized
+			groups in the pattern, and it can go up to $9! The whole match can be referred to with $&.You can also pass a function instead of a string as the
+			second argument to replace. Heres an example: */
+			var s = "the cia and fbi";
+			console.log(s.replace(/\b(fbi|cia)\b/g, function(str) {
+				return str.toUpperCase();
+			})); // Should output -> the CIA and FBI
+
+			// Heres an example that strips comments from passed in code
+			function stripComments(code) {
+				return code.replace(/\/\/.*|\/\*[^]*?\*\//g, "");
+			}
+			console.log(stripComments("x+1; // Heres a comment!")); // Should output -> x+1;
+			console.log(stripComments("x*9; /* Heres a multi-line comment */")); // Should output -> x*9;
+
+			// Lets cover dynamically creating RegExp objects
+			/* There are some cases where you might not know the exact pattern you need to match against because the user has to input the information
+			first since you can't use backslash notation when the program is running. You can use the RegExp constructor covered eaelier. */
+			var name = "harry";
+			var text = "Harry is a suspicious character.";
+			var regexp = new RegExp("\\b(" + name + ")\\b", "gi");
+			console.log(text.replace(regexp, "_$1_")); // Should output -> _Harry_ is a suspicious character.
+			/* When creating a \b boundary marker, we have two backslashes because we are writing them in a normal string, not a slash-enclosed regular expression.
+			The second argument to the RegExp constructor contains the options for the regular expression - in this case "gi" for global and case-insensitive */
+
+			// Now lets go over the search method
+			/* idexOf method on strings cannot be called with a regular expression, so we use the search method instead which returns the first index on which
+			the expression was found, or a -1 when its not found */
+			console.log("  word".search(/\S/)); // Output -> 2 // Remember that \S looks for any character, including whitespace
+			console.log("     ".search(/\S/)); // Output -> -1
+
+			// Now lets go over the LastIndex property
+			/* The exec method similarly does not provide a convenient way to start searching from a given position in the string. Well it does, but in an
+			inconvenient way.  */
+			var pattern = /y/g;
+			pattern.lastIndex = 3;
+			var match = pattern.exec("xyzzy");
+			console.log(match.index); // Output -> 4
+			console.log(pattern.lastIndex); // Output -> 5
+
+			// Now lets cover looping over matches!
+			/* A common pattern to use is to scan through all the occurences of a pattern in a string */
+			var input = "A string with 3 numbers in it... 42 and 88.";
+			var number = /\b(\d+)\b/g;
+			var match;
+			while (match = number.exec(input))
+				console.log("Found", match[1], "at", match.index); //Output -> Found 3 at 14... etc.
+
+			// Lets cover the basic process of parsing an INI file
+			/* So heres the example .ini file:
+			searchengine=http://www.google.com/search?q=$1
+			spitefulness=9.7
+
+			; comments are preceded by a semicolon...
+			; each section concerns an individual enemy
+			[larry]
+			fullname=Larry Doe
+			type=kindergarten bully
+			website=http://www.geocities.com/CapeCanaveral/11451
+
+			[gargamel]
+			fullname=Gargamel
+			type=evil sorcerer
+			outputdir=/home/marijn/enemies/gargamel
+
+			So we want to read an INI file with the following rules:
+				- Blank lines and lines staring with semicolons are ignored
+				- Lines wrapped in [ and  ] start a new section 
+				- Lines containing alphanumeric indentifier followed by an = character add a setting to the current section
+				- Anything else is invalid
+
+			To start, we want to split the file into seperate lines, so using string.split("\n") will do the trick, and we can use a regular expression
+			along with \n so we'll use /\r?\n/ to split in a way that allows both \n and \r\n between lines */
+			function parseINI(string) {
+				// Start with an object to hold the top level fields
+				var CurrentSection = {name: null, fields: []};
+				var categories = [CurrentSecion];
+
+				string.split(/\r?\n/).forEach(function(line) {
+					var match;
+					if (/^\s*(;.*)?$/.test(line)) { // If a comment is detected, do nothing
+						return;
+					} 
+					else if (match = line.match(/^\[(.*)\]$/)) { // If square brackets were found, start a section
+						currentSection = {name: match[1], fields: []};
+						categories.push(CurrentSection);
+					}
+					else if (match = line.match(/^(\w+)=(.*)$/)) { // If a command with an equal sign, and some more characters are found, perform condition
+						currentSection.fields.push({name: match[1], value: match[2]});
+					}
+					else {
+						// There has been an error, pass in the line where the INI code is invalid
+						throw new Error("Line '" + line + "' is invalid");
+					}
+				});
+
+				return categories;
+			}
+			/* Now keep in mind the function won't actually be used, its just to go over how it would work */
+		</script>
+	</body>
+</html>

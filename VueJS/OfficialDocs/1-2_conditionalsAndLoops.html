@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lesson 1</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+
+<!-- CONTENT AREA -->
+
+<!-- Example 1: Simple if conditional -->
+<div id="app">
+	<p v-if="seen">Now you see me</p>
+</div>
+
+<!-- Example 2: For loop -->
+<div id="app2">
+	<ol>
+		<li v-for="todo in todos"> <!-- Try to remember this conditional -->
+			{{ todo.text }}
+		</li>
+	</ol>
+</div>
+
+<!-- END CONTENT AREA -->
+
+
+<script>
+
+// Example 1: Pretty simple, will set the variable to true and DOM element will show
+var app = new Vue({
+	el: '#app',
+	data: {
+		seen: true
+	}
+
+	// Enter app.seen = false and you will see the DOM element will disappear
+
+	// I get what reative apps are now. Just a way to connect the JS and the DOM
+	// to create interfaces more easily.
+})
+
+// Example 2: A for loop for outputting to-do list items
+var app2 = new Vue({
+	el: '#app2',
+	data: {
+		todos: [
+			{ text: 'Learn Javascript' },
+			{ text: 'Learn Vue' },
+			{ text: 'Build something awesome' }
+		]
+	}
+})
+// You can enter app2.todos.push({text: 'New Item'}) to add a new item.
+
+</script>
+
+</body>
+</html>

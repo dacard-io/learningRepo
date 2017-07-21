@@ -1,0 +1,181 @@
+<!--
+	This chapter covers drawing on canvas and working with SVG files
+-->
+<html>
+	<head>
+		<title>Chapter 16 - Canvas</title>
+	</head>
+	<body>
+		<!-- There are two alternatives to drawing on the screen. The first is using Scalable Vector Graphics (SVGs) and the other is drawing on canvas. SVGs are
+		DOM based, while Canvas is a single DOM element that gives an interface to draw onto it. -->
+
+		<!-- Lets cover SVGs -->
+		<p>Normal HTML here</p>
+		<svg xmlns="http://www.w3.org/2000/svg"> <!-- The xlmns attribute changes to a different XML namespace, the URL specified changes the dialect the SVGs are read in -->
+			<circle r="50" cx="50" cy="50" fill="red" />
+			<rect x="120" y="5" width="90" height="90" stroke="blue" fill="none"/>
+			<!-- <circle> and <rect> tags obviously don't exist in HTML, but exist in the SVG dialect. This book won't cover SVGs in detail, but a only an overview -->
+		</svg>
+			<script>
+				var circle = document.querySelector("circle");
+				circle.setAttribute("fill", "cyan");
+			</script>
+
+		<!-- Now lets cover the Canvas element -->
+		<p>Before canvas</p>
+		<canvas width="800" height="860"></canvas>
+		<!-- When no width or height is set for canvas, it gets a default size of 300 pixels wide by 150 pixels high -->
+		<p>After canvas</p>
+			<script>
+				var canvas = document.querySelector("canvas"); // Select the canvas object
+				var context = canvas.getContext("2d"); // Create the context object and bind to the canvas object. There is 2d, and webgl for 3D
+				context.fillStyle = "red"; // Set fill style to red
+				context.fillRect(10, 10, 100, 50); // Fill the canvas object - arguments, (x, y, width, height)
+			</script>
+			<!-- As a note, multiple canvas' can in some cases improve overall performance. Quick example. Lets say you have a game, with two canvases. One canvas
+			holds the background of the game, and the other canvas holds all moving objects. This setup would be better because you everytime you change the canvas,
+			its redrawn, so if you were to have everything in one canvas, the background has to be redrawn for no reason. Having a seperate canvas will prevent redrawing
+			an entire background over and over again. -->
+
+		<!-- Now lets cover filling and stroking -->
+			<script>
+				var cx = document.querySelector("canvas").getContext("2d"); // Bind cx to the canvas object, and set the context to 2d
+				cx.strokeStyle = "blue"; // Set the stroke or line along the border to color blue - any CSS color is understood here
+				cx.strokeRect(5, 5, 50, 50); // Stroke a rectangle at position (5,5) 50 pixels wide, and 50 pixels long
+				cx.lineWidth = 5; //Set line width of the stroke to 5px
+				cx.strokeRect(135, 5, 50, 50); // Stroke another rectangle at another position 
+			</script>
+
+		<!-- Now lets cover paths -->
+			<script>
+				var path_cx = document.querySelector("canvas").getContext("2d"); // Bind path_cs to the canvas object and set the context to 2d
+				path_cx.beginPath(); // Use beginPath to create a path (line)
+				for (var y = 10; y < 100; y += 10) { // Use a for loop to create multiple lines at different y coordinates
+					path_cx.moveTo(10, y); // Use the moveTo function to designate the start of the line segment
+					path_cx.lineTo(90, y); // Use lineTo to designate the end of the line segment
+				}
+				path_cx.stroke(); // And finally use stroke to create create the path
+
+				// Here is another example - a triangle
+				path_cx.beginPath();
+				path_cx.moveTo(50, 10);
+				path_cx.lineTo(10, 70);
+				path_cx.lineTo(90, 70);
+				path_cx.fill(); // Fill the path created - you can also end the path by using closePath()
+			</script>
+
+		<!-- Now lets go over curves -->
+		<!-- Curves require a little bit more involvement. Use the quadraticCurveTo method to draw a curve at a given point. To determine the curve, the method is given
+		a control point as well as a destination point. The control point is the point the line attracts to, never actually touching it, giving the line its curve. -->
+			<script>
+				var curve_cx = document.querySelector("canvas").getContext("2d"); // Bind curve_cx to the canvas element, and give it a 2D context
+				curve_cx.beginPath(); // So you begin drawing the path
+				curve_cx.moveTo(10,90); // Indicate the starting point
+				// Control = (60, 10) goal = (90, 90)
+				curve_cx.quadraticCurveTo(60, 10, 90, 90); // Create the curve
+				curve_cx.lineTo(60,10); // Draw to this point
+				curve_cx.closePath(); // End the path
+				curve_cx.stroke(); // Stroke the path
+
+				/* There are more types of curves such as bezierCurveTo(), and arc() and arcTo(), but we can cover this later! We have to cover alot of information */
+			</script>
+
+		<!-- Now lets go over drawing a pie chart - from Customer survey data -->
+			<script>
+				var results = [
+					{name: "Satisfied", count: 1043, color: "lightblue"},
+					{name: "Neutral", count: 563, color: "lightgreen"},
+					{name: "Unsatisfied", count: 510, color: "pink"},
+					{name: "No Comment", count: 175, color: "silver"}
+				];
+
+				var pie = document.querySelector("canvas").getContext("2d");
+				var total = results.reduce(function(sum, choice) {
+					return sum + choice.count;
+				}, 0);
+				// Start at the top
+				var currentAngle = -0.5 * Math.PI;
+				results.forEach(function(result) {
+					var sliceAngle = (result.count / total) * 2 * Math.PI;
+					pie.beginPath();
+					// Center=100, 100, radius = 100
+					// From current angle, clockwise by slice's angle
+					pie.arc(100, 100, 100, currentAngle, currentAngle + sliceAngle);
+					currentAngle += sliceAngle;
+					pie.lineTo(100, 100);
+					pie.fillStyle = result.color;
+					pie.fill();
+				}); // [HE MADE A SERIES OF MOVEMENTS AND THE BALL WENT INTO THE BASKET]
+			</script>
+
+		<!-- Now lets go over drawing text on the canvas -->
+			<script>
+				var text = document.querySelector("canvas").getContext("2d");
+				text.font = "28px Georgia";
+				text.fillStyle = "fuchsia";
+				text.fillText("I CAN DO TEXT!", 250, 50) // Arguments (message, X, Y)
+			</script>
+
+		<!-- Now lets go over drawing images -->
+			<script>
+				/* Lets use the drawImage method to draw pixel data onto the canvas. In this example, we're going to draw a bunch of hats*/
+				var image = document.querySelector("canvas").getContext("2d"); // Bind the image variable to the canvas
+				var img = document.createElement("img"); // Create an img element
+				img.src = "http://freepngimages.com/wp-content/uploads/2014/06/top-hat.png"; // Set the Source url for the element
+				// Now we don't want to draw the image just yet because it needs to load, so use the load event handler to do the drawing after its loaded
+				img.addEventListener("load", function() { // Bind the event handler to the image element, not the canvas.
+					for (var x = 10; x < 200; x += 30)
+						image.drawImage(img, x, 200, 120, 100); // Draw the image element onto the canvas
+						/* drawImage takes nine arguments: drawImage(img,sx,sy,swidth,sheight,x,y,width,height); 
+							img = The image, canvas, or video element to use
+							sx = *optional. The x coordinate where to start clipping
+							sy = *optional. The y coordinate where to start clipping
+							swidth = *optional. The width of the clipped image
+							sheight = *optional. The height of the clipped image
+							x = The x coordinate where to place the image on the canvas
+							y = The y coordinate where to place the image on the canvas
+							width = *optional, The width of the image to use
+							height = *optional. The height of the image to use. */
+				});
+
+				/* Now lets use a sprite sheet to animate it */
+				var player = document.querySelector("canvas").getContext("2d"); // Bind the player variable to the canvas, and set context to 2D
+				var image = document.createElement("img"); // Create an img element and bind it to the image variable
+				image.src = "chapter16_sprite.png"; // Set the image source
+				var spriteW = 24, spriteH = 30; // Set the sprite's width and height
+				image.addEventListener("load", function() { // Bind event handler to image, then when resource loaded, perform function
+					var cycle = 0; // Set cycle to equal 0
+					setInterval(function() { // Create an interval (a repeating timer)
+						player.clearRect(200, 300, spriteW, spriteH);
+						player.drawImage(image, cycle * spriteW, 0, spriteW, spriteH, 200, 300, spriteW, spriteH);
+						cycle = (cycle + 1) % 8;
+					}, 90) // Run at 90 milliseconds per interval
+				});
+			</script>
+
+		<!-- Now lets go over transformations -->
+			<script>
+				/* You can use transformations to do anything from stretching and shrinking, rotating, warping, and horizontal/vertical flipping, and more. For example
+				are sprite only looks like its walking right. What about left? You can make another set of sprites, but why would you want to do that. You can use
+				transformations for that kind of thing */
+				var transform = document.querySelector("canvas").getContext("2d");
+				transform.scale(3, .5);
+				transform.beginPath();
+				transform.arc(50, 50, 40, 0, 7);
+				transform.lineWidth = 3;
+				transform.stroke()
+				/* Scale will cause everything about the drawn image including the line width, to be stretched out or squeezed together as specified. Scaling by
+				a negative amount will flip the image. So scale(-1, 1) will flip the image, but it will flip you out of the canvas. You can deal with this by adjusting
+				the coordinates to the image object back into the canvas, but thats just more work. So we are going to use the other methods to make it easier. */
+				transform.translate(around, 0);
+				transform.scale(-1, 1);
+				transform.translate(-around, 0);
+			</script>
+		<!-- Now lets cover storing and clearing transformations -->
+			<script>
+				var transform = document.querySelector("canvas").getContext("2d");
+				transform.save(); // Use the save method to save the current transformation on the object
+				transform.restore(); // Use restore to restore a saved transformation to this object
+			</script>
+	</body>
+</html>

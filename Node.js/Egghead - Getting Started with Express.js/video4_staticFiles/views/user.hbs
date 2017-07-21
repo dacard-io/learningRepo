@@ -1,0 +1,23 @@
+<!-- This is the user details page (oh no you can't stop me) -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Handlebars with Static content</title>
+		<style>
+			* {
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			div {
+				display: flex;
+				align-items: center;
+				padding: 1em;
+				font-size: 1.2em;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>{{username}}</h1>
+		<img src="/profilepics/{{username}}_lg.jpg" alt="">
+	</body>
+</html>

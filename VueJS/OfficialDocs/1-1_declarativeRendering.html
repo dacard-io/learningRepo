@@ -1,0 +1,71 @@
+<!-- The first Vue.js tutorial. Lets get started. Vue is being chosen over react-js because its wayyyyy easier
+	and makes way more sense. -->
+
+<!-- For the sake of simplicity, we're going to just load everything in a regular HTML file and see how everything works -->
+
+<!-- Also we're using the unminified version of Vue.js because it spits out
+	any error you might want to see. -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lesson 1</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+
+<!-- CONTENT AREA -->
+
+<!-- First example -->
+<div id="app">
+	{{ message }}
+</div>
+
+<!-- Second Example -->
+<div id="app-2">
+	<span v-bind:title="message">
+		Hover your mouse over me for a few seconds to see my dynamically bound title!
+	</span>
+</div>
+
+<!--  2nd Example:
+	So thats fucking cool. I binded the message property that vue will output into 
+	the HTML attribute "title" to show the time on hover. I can put "class", and set
+	the data to whatever I want. SO FUCKIN COOL. Just use v-bind directive. Vue.js
+	has many directives, and they all start with v-.
+-->
+
+<!-- END CONTENT AREA -->
+
+<script>
+// First Example
+var app = new Vue({
+	el: '#app', // el is for element
+	data: {
+		message: 'Hello Vue!'
+	}
+})
+
+// Second Example
+var app2 = new Vue({
+	el: '#app-2',
+	data: {
+		message: 'You loaded this page on ' + new Date()
+	}
+})
+
+</script>
+
+</body>
+</html>
+
+<!-- 1st Example:
+	So very simple. We declaratively rendered data to the DOM, making it "Reactive". 
+	What this means is that the JS data and DOM are linked. You can actually see this by 
+	opening up the JS console and setting app.message. Everything is realtime! 
+	(This is way nicer than react honestly)
+-->
+
+<!-- 2nd Example:
+	[Described on top]
+-->

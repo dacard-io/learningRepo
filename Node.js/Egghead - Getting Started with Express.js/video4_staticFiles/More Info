@@ -1,0 +1,7 @@
+// So in the scripts section, its usually good practice to add a start command to start the server. 
+// So I added the start command in package.json, now all you have to do is go to the working directory and type in
+// "npm start" and the server/script will start .
+
+Also it gets annoying as hell when your editing your node.js app, and you have to kill and restart the server everytime
+whenever you make a change, so install nodemon to solve this problem. Then add in your package.json scripts
+section, "nodemon index.js", and in the console, type in npm run dev

@@ -1,0 +1,33 @@
+<!--
+	Chapter 2 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 2 - Values Types and Operators</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			/* The purpose of this exercise is to output to console.log numbers 1 to 100 with two exceptions. For numbers, divisible
+				by 3, print Fizz; For numbers divisible by 5 (and not 3), print Buzz! 
+
+				This is actually an interview question that is commonly used to weed out shitty developers! */
+
+			for (var count = 0; count < 100; count++) {
+				if (count % 3 == 0) {
+					console.log(count + " Fizz");
+				}
+				else if (count % 5 == 0) {
+					console.log(count + " Buzz");
+				}
+				/* Below is the code to check if both divisible by 3 and 5, commented out so it can work properly
+				else if (count % 3 == 0 && count % 5 == 0) {
+					console.log(count + " FizzBuzz");
+				} */
+				else {
+					console.log(count);
+				}
+			}
+		</script>
+	</body>
+</html>

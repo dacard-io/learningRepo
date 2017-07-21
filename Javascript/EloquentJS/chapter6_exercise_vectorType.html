@@ -1,0 +1,39 @@
+<!--
+	Chapter 6 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 6 - The Secret Life of Objects</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			/* Purpose of this exercise is to create a constructor Vector that represents a vector in two-dimensional space. It takes
+			x and y parameters (numbers) which should save to properties of the same name. Give the vector prototype two methods, plus and 
+			minus that take another vector as a parameter and return a new vector that has the sum or difference of two vectors' (the one in
+			this and the parameter) x and y values. Add a getter property length to the prototype that computes the length of the vector - that
+			is, the distance of the point (x,y) from the origin (0,0) */
+
+			// Create the constructor
+			function Vector(x, y) {
+				this.x = x; // Create the x property and set it to argument "x"
+				this.y = y; // Create the y property and set it to argument "y"
+				// Define a getter DefineProperty to override the default length property that comes with Javascript
+				Object.defineProperty(this, "length", {
+					enumerable: false,
+					value: Math.sqrt((this.x*this.x) + (this.y*this.y))
+				});
+			}
+			Vector.prototype.plus = function(other) {
+				return new Vector(this.x + other.x, this.y + other.y); 
+				// Haha shit, using "this" refers to the originating object, so doing object.plus.item > "this" refers to object, and the argument passed refers to item
+			}
+			Vector.prototype.minus = function(other) {
+				return new Vector(this.x - other.x, this.y - other.y);
+			}
+
+			console.log(new Vector(1,2).plus(new Vector(2,3))); // Output should be -> Vector{x: 3, y: 5}
+			console.log(new Vector(3,4).length) // Output should be 5!
+		</script>
+	</body>
+</html>

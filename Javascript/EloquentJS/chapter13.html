@@ -1,0 +1,203 @@
+<!--
+	Finally. God I miss HTML. Okay we are now going to be manipulating the DOM. THANK CHRIST.
+
+	This section covers the Document Object Model!
+-->
+<html>
+	<head>
+		<title>Chapter 13 - The Document Object Model</title>
+	</head>
+	<body>
+		<!-- Place some basic HTML here -->
+		<h1>My home page</h1>
+		<p>Hello, I'm David and I'm almost done with this book!</p>
+		<p>Here it is: <a href="http://eloquentjavascript.net">Eloquent Javascript</a></p>
+		<img alt="A picture of a beachball" id="beachball" src="http://ecx.images-amazon.com/images/I/31eZfz2aiGL.jpg" height="100px" width="auto">
+		<img alt="A picture of a basketball"class="basketball" src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png" height="100px" width="auto">
+
+		<p class="paragraphs">One</p>
+		<p class="paragraphs">Two</p>
+		<p class="paragraphs">Three</p>
+
+		<blockquote id="quote">
+			No book can ever be finished. While working on it we learn just enough to find it immature the moment we turn away from it
+		</blockquote>
+
+		<!-- Here I am creating my own attribute! -->
+		<p data-classified="secret">The launch code is 00000</p>
+		<p data-classified="unclassified">I have two feet</p>
+
+		<p id="layoutP" style="border: 3px solid red">I'm boxed in</p>
+
+		<!-- This area is to go over the query selector section -->
+		<p>And if you go chasing <span class="animal">rabbits</span></p>
+		<p>Tell 'em a <span class="character">hookah smoking</span><span class="animal"> caterpillar</span></p>
+		<p>Has given you the call</p>
+
+		<!-- This area is for the animation and positioning section -->
+		<p style="text-align:center">
+			<img class="dog" style="position: relative" src="http://www.polyvore.com/cgi/img-thing?.out=jpg&size=l&tid=10255158">
+		</p>
+
+		<!-- Script goes below here! -->
+		<script>
+			/* Lets start with some notes. The DOM has global variables that can be used (and you see them all the time). "document" gives access to
+			all of the DOM's objects and "documentElement" refers to objects representing the <html> tag, and has properties for <head> and <body>.
+
+			The DOM can be visualized as a tree, with document.documentElement as the root. Elements can have nodes and child nodes, such an example is
+			document.body. Each DOM node has a nodeType property, which contains a numeric code to identify the node. Regular elements have the value 1,
+			and can be also defined as the constant property document.ELEMENT_NODE, and also document.TEXT_NODE (which have the value of 3) for a section 
+			of text in the document, and document.COMMENT_NODE which has a value of 8. But using numeric codes for each node would suck to use. So this is
+			just information you can use. */
+
+			// Now lets cover finding elements
+			/* Lets get the href link on the page, but only the first one */
+			var link = document.body.getElementsByTagName("a")[0]; // Get only the first instance of it
+			console.log(link.href); // Print out the url of the link
+			/* The problem with this method is that if you were to change the order of the link to another part of the page, hard coding the array would cause
+			some issues and features would break. So you can also specifically choose an item by an id attribute and a class attribute! */
+			var beachball = document.getElementById("beachball"); // Don't need to use body in this one, since your not going through the DOM tree
+			console.log(beachball.src); // Output the image url of the beachball element
+			var basketball = document.getElementsByClassName("basketball")[0]; // So classes are read as an array, ID is specific to one object
+			console.log(basketball.src);
+
+			// Now lets go over changing the document
+			/* Everything about the DOM data structure can be changed. The removeChild method removes the given child node from the document. To add a child node,
+			you use the appendChild method, which puts a node at the end of the list of children, or insertBefore, which inserts a node given as the first argument before
+			the node given as the second argument. */
+			var paragraphs =document.getElementsByClassName("paragraphs");
+			document.body.insertBefore(paragraphs[2], paragraphs[0]); // Will rearrange the <p> tags with the class paragraphs to output -> three one two
+			/* You can also use replaceChild to replace a child node with another one. It takes two arguments, a new node, and the node to be replaced. Remember that
+			replaceChild and insertBefore expect the new node as their first argument */
+
+			// Now lets go over creating new nodes
+			/* Lets write a small script that replaces all <img> tags with the text held at their alt attributes */
+			function replaceImages() {
+				var images = document.body.getElementsByTagName("img");
+				for (var i = images.length -1; i >= 0; i--) {
+					var image = images[i];
+					if (image.alt) { // If an alt property exists
+						var text = document.createTextNode(image.alt); // CreateTextNode creates a type 3 DOM Node (a text node) which will insert into the document and show
+						image.parentNode.replaceChild(text, image);
+					}
+				}
+			}
+			replaceImages(); // Run the function
+			/* To create a regular type 1 node, you can use document.CreateElement which takes a tag name, and returns a new empty nod of the given type. The following example defines a utility "elt" which creates an element node and treats the rest of the arguments as children of that node. This function then is used to add
+			a simple attribution to a quote. */
+			function elt(type) {
+				var node = document.createElement(type);
+				for (var i = 1; i < arguments.length; i++) {
+					var child = arguments[i];
+					if (typeof child == "string")
+						child = document.createTextNode(child);
+					node.appendChild(child);
+				}
+				return node;
+			}
+			document.getElementById("quote").appendChild(
+				elt("footer", "-", 
+					elt("strong", "Karl Popper"), 
+					", preface to the second edition of ", 
+					elt("em", "The Open Society"), 
+					"1950"
+				)
+			);
+
+			// Lets go over attributes
+			/* HTML allows you to set your own attribute names so there is no interference with properties of the DOM */
+			var paras = document.body.getElementsByTagName("p");
+			Array.prototype.forEach.call(paras, function(para) {
+				if (para.getAttribute("data-classified") == "secret")
+					para.parentNode.removeChild(para);
+			}); // This was a more complex way of doing things, but regardless it hides any <p> element with the data-classified attribute set to secret
+
+			/* Okay so the book provides more in-depth examples on these concepts, but the truth is the concepts are pretty simple to begin with, so we can take it
+			easy on typing out each page of the fuckin book jesus christ */
+
+			// Lets cover layout
+			/* Okay this section covers CSS layouts in Javascript, honestly I already know how to do this, and I should just keep a reference of some of the attributes
+			associated: left, right, offsetWidth, offsetHeight, pageXOffSet, pageYOffset. Just get a reference for all of them */ 
+			var layoutP = document.getElementById("layoutP"); // Set variable to equal an element
+			console.log("clientHeight: ", layoutP.clientHeight); // Output the client height, or size of space inside element in px
+			console.log("clientWidth: ", layoutP.clientWidth); // Output the client width, or size of space inside element in px
+			console.log("getBoundingClientRect: ", layoutP.getBoundingClientRect());
+			/* Here some of the basic CSS DOM properties that can be modified:
+				offsetWidth/offsetHeight = the space the element takes up in pixels
+				clientWidth/clientHeight = the size of space inside the element in pixels
+				getBoundingClientRect() = Gives precise position of element with top/bottom/left/right pixels and width/height
+				pageXOffset/pageYOffset = Gives the X and Y axis scroll position!
+			
+			Remember, a program that repeatedly alternates between DOM layout information and changing the DOM forces a lot of layouts to happen, and will consequently
+			run slowly no matter how fast your computer is. Here are two examples of this
+
+			Naive slow version:
+			time("naive", function() {
+			    var target = document.getElementById("one");
+			    while (target.offsetWidth < 2000)
+			    target.appendChild(document.createTextNode("X"));
+			}); // → naive took 32 ms
+			  
+			Clever fast version: 
+			time("clever", function() {
+			    var target = document.getElementById("two");
+			    target.appendChild(document.createTextNode("XXXXX"));
+			    var total = Math.ceil(2000 / (target.offsetWidth / 5));
+			    for (var i = 5; i < total; i++)
+			    target.appendChild(document.createTextNode("X"));
+			}); // → clever took 1 ms
+			*/
+			// Lets now cover styling
+			/* You can modify the CSS of objects using the style property! You kinda already know how this works. You can put an inline style attribute into your
+			HTML code, but you can also do so with Javascript, and the world becomes your oyster. There are properties for every single CSS style, so look up a reference
+			to all of them later. I'm just going to quickly go over how to use them! 
+
+			Here are some more you can use(not all of them, just some. You should already know how to use these CSS properties):
+			position	color	background	cursor	animation
+			border/borderBottom/borderBottomLeftRadius/borderBottomStyle/borderBottomWidth
+			top/bottom/left/right	display		height/width
+			display		margin/marginBottom		maxHeight/maxWidth
+			minHeight/minWidth		overflow	padding/paddingleft
+			textAlign	textOverflow	textDecoration		textTransform
+			transform   transition		zIndex		listStyle
+
+			Like I said there are way more of them, but these are some important ones
+			*/
+			var changeStyle = document.getElementsByTagName("p")[2];
+			changeStyle.style.color = "blue"; // Change the color of the "Three" paragraph color to blue!
+
+			// Now lets go over query selectors
+			/* The querySelectorAll method defined on both the document object and element nodes, takes a selector string and returns an array like object containing
+			all the elements that were matched */
+			function count(selector) {
+				return document.querySelectorAll(selector).length;
+			}
+			console.log(count("p")); // Should output the number of all <p> elements
+			console.log(count(".animal")); // Should output the number of .animal classes, which should be 2 from the span's
+			console.log(count("p .animal")); // Should output the number of .animal classes inside of all <p> tags, which should be 2
+			console.log(count("p > .animal")); // The number of .animal classes that are a direct child of <p>, which should be 2
+			/* You can also use the querySelector method if you want a specific single element. It will return only the matching element, or null if no elements
+			match. Unlike methods such as getElementsByTagName, the object returned by querySelectorAll is not live, as in, it won't change the document. */
+			/* Haha so I don't necassarily need JQuery for selectors...but JQuery gives you a host of compatibility fixes so you should still probably
+			use it. It also has tons of animations and fancy widgets */
+
+			// Now lets cover positioning and animating [*breathing and zeal intensifies*]
+			/* So lets create an animation */
+			var dog = document.querySelector(".dog");
+			var angle = 0, lastTime = null; 
+			function animate(time) { // animate is passed the current time as an argument
+				if (lastTime != null)
+					angle += (time - lastTime) * 0.001; // .001 is milliseconds! so its a smoother animation
+				lastTime = time;
+				dog.style.top = (Math.sin(angle) * 20) + "px"; // We're going to do a rotation. So you have to use trig. Damn I should probably brush up on math
+				dog.style.left = (Math.cos(angle) * 200) + "px"; // The units are default in em, so we have to append "px" to set the unit
+				requestAnimationFrame(animate); //requestAnimationFrame schedules the animation function to run when the browser is ready to repaint the screen
+			}
+			requestAnimationFrame(animate);
+
+			/* And that concludes this chapter. This section was a hell of alot of fun. For me at least, working with the console can be incredibly boring, and you
+			don't see results like you would on the DOM. Next section covers timers, event listeners, etc. Its about to get alot more interesting */
+
+		</script>
+	</body>
+</html>

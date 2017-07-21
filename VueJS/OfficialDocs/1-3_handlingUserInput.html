@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lesson 1</title>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+
+<!-- CONTENT AREA -->
+
+<!-- Example 1: v-on directive (Adding event listeners to invoke Vue methods) -->
+<div id="app">
+	<p>{{ message }}</p>
+	<button v-on:click="reverseMessage">Reverse Message</button>
+</div>
+
+<!-- Example 2: v-model directive (Two-way binding between form input and app) -->
+<div id="app2">
+	<p>{{ message }}</p>
+	<input v-model="message">
+</div>
+
+<!-- END CONTENT AREA -->
+
+<script>
+
+// Example 1: v-on directive and adding event listeners to invoke Vue methods
+var app = new Vue({
+	el: '#app',
+	data: {
+		message: 'Hello Vue.js!'
+	},
+	methods: {
+		reverseMessage: function() {
+			this.message = this.message.split('').reverse().join('')
+		}
+		// "this" context is DOM instance (I think) or maybe just in the data object
+	}
+})
+
+// Example 2: v-model directive
+var app2 = new Vue({
+	el: '#app2',
+	data: {
+		message: 'Hello Vue!'
+	}
+})
+
+
+</script>
+
+</body>
+</html>

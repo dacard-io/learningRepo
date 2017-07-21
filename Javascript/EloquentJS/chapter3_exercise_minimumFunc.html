@@ -1,0 +1,28 @@
+<!--
+	Chapter 3 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 3 - Functions</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+		function min(x, y) {
+			if (x < y) { // If argument x is less than y, return x
+				return x;
+			}
+			else if (y < x) { // Else if argument y is less than x, return y
+				return y;
+			}
+			else { // Else the values are equal, return a message
+				return "Error - Both are equal!"
+			}
+		}
+
+		console.log(min(7,20)); // Should return 7
+		console.log(min(13,4)); // Should return 4
+		console.log(min(6,6)); // Should return an error because they are both equal
+		</script>
+	</body>
+</html>

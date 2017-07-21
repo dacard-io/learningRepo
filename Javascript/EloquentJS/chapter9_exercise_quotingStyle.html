@@ -1,0 +1,21 @@
+<!--
+	Chapter 9 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 9 - Regular Expressions</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			/* Replace the quotes in the output with proper double quotes, and distinguish whether there should be a single or double quote in the text */
+			
+			var text = "'I'm the cook,' he said, 'it's my job.'";
+			// Change this call.
+			console.log(text.replace(/\W'|'\W/g, "\""));
+			// → "I'm the cook," he said, "it's my job."
+
+			// I'm close, but can't figure out how to fix the first double quote. Shit, come back to it later, have to move on
+		</script>
+	</body>
+</html>

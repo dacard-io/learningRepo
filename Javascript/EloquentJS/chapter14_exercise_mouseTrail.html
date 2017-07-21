@@ -1,0 +1,39 @@
+<!--
+	Chapter 14 Exercise
+-->
+<html>
+	<head>
+		<title>Chapter 14 - Event Handlers</title>
+	</head>
+	<body>
+		<style>
+			.trail {
+				position: absolute;
+				height: 6px; width: 6px;
+				border-radius: 3px;
+				background: teal;
+			}
+			body {
+				height: 300px;
+			}
+		</style>
+
+		<script>
+			/* Create a mouse trail of blue dots, then delete any dots exceeding 10 dots */
+			// Add a global event listener
+			addEventListener("mousemove", function(event) {
+				var trail = document.createElement("div"); // Create a div element
+				trail.className = "trail"; // Set its classname to trail to inherit the CSS styles
+				trail.style.left = (event.pageX - 3) + "px";
+				trail.style.top = (event.pageY - 3) + "px";
+
+				// Then append the element to the screen
+				document.body.appendChild(trail);
+
+				console.log(trail.length)
+			});
+
+			/* Haha that was too easy! On to the next chapter! */
+		</script>
+	</body>
+</html>

@@ -1,0 +1,143 @@
+<!--
+	So this is the 2nd chapter of Eloquent Javascript I'm going to cover!
+	Some chapters have pure information and no examples, so I might not create
+	a file for that chapter! Also do the excercises for each chapter!!!
+-->
+<html>
+	<head>
+		<title>Chapter 2 - Values Types and Operators</title>
+	</head>
+	<body>
+		<!-- Script goes below here! -->
+		<script>
+			// Declare some variables
+			var caught = 5 * 5;
+			var ten = 10;
+			/* As a quick note, variables cannot be named reserved words, cannot
+			   have spaces and cannot start with a number */
+
+			// Print out some values onto the JS console!
+			console.log(caught);
+			console.log(ten * ten);
+
+			// Set a variable to a string
+			var mood = "light";
+			console.log(mood); // Then output the mood variable
+			var mood = "dark"; // Change the variable to another value
+			console.log(mood); // Output the mood variable again to show a different value
+
+			// Do some calculations on a variable
+			var DavidsDebt = 3800;
+			// Perform an operation onto the variables value
+			DavidsDebt = DavidsDebt - 1400;
+			// Now output the new value
+			console.log(DavidsDebt);
+
+			// Now declare variables on the same line
+			var one = 1, two = 2;
+			console.log(one + two); // Now output the two variables combined
+
+			// Now use the alert function
+			alert("Hello again!");
+
+			// Now declare a variable, and print a string a variable at the same time
+			var x = 78;
+			console.log("the value of x is", x);
+
+			// Now use the Math.max function to get the highest value of two values
+			console.log(Math.max(2, 4)); // Output should be 4
+
+			// Now create a confirmation box!
+			confirm("Shall we?");
+			// Now create a prompt! The second argument is the default value shown
+			prompt("Tell me what you know.", "...")
+			/* As a note, its not recommended to use alert, confirm, and prompt boxes
+			   in modern web design because of the inability to style the way they look */
+
+			/* So now I'm going to cover conditionals. Big note, you can actually
+				leave out the curly braces {} in conditionals. But it looks inconsistent
+				and can be difficult to manage. For the rest of the tutorials, I'm going 
+				to use curly braces. But I would like to show how you don't have to use it
+				here!
+			*/
+
+			// Now create a basic conditional program
+			var theNumber = Number(prompt("Pick a number", "")); // Use Number() to convert argument given into a number
+			// If the variable is a number, output the variable through an alert box
+			if (!isNaN(theNumber))
+				alert("Your number is the square root of " + theNumber * theNumber);
+			else
+				alert("ERROR - You didn't give a number");
+
+			// Now do a more complete if conditional
+			var num = Number(prompt("Pick a number", "0"))
+			if (num < 10)
+				alert("Small Number!");
+			else if (num < 100)
+				alert("Medium Number!");
+			else
+				alert("Come on man, you have to give a number");
+
+			// Now perform a while loop
+			var number = 0;
+			while (number <= 12) {
+				console.log(number);
+				number = number + 2;
+				// Works exactly like a for loop, while number less than or equal to 12,
+				// output the variable, and increment it's value by 2. So it should output
+				// its value 7 times!
+			}
+
+			// Now perform a do...while loop! 
+			/* Remember the difference between a while and do...while loop... the do...while loop executes at least one time before running the conditional */
+			do { // Run the loop one time first
+				var yourName = prompt("What is your name?") // Ask for a name, and store in yourName variable
+			} while (!yourName); // Prompt the user until it returns a non-empty string
+			console.log(yourName); // Output the variable
+
+			/* Lets go over the condition above real quick. When you apply the NOT operator (!) to a string, all strings except " " return true */
+
+			// Now create a for loop
+			// Syntax: for (init variable, condition to run, and increment)
+			for (var number = 0; number <= 12; number = number + 2) {
+				console.log(number);
+			} // Exactly the same as the while loop from before!
+
+			// Now how to break out of a loop, use the break statement!
+			/* Notice how this for loop doesn't have a conditional, this means it will run forever until a break is initiated */
+			// Also look at how the incrementing is the same as C!
+			for (var current = 20; ; current++) {
+				if (current % 7 == 0) { // If "current" is divisible by 7, then return 0, and validate the condition
+					break; // Break the loop!
+				}
+			}
+			// At first, current won't be divisible by 7, but it will iterate until it reaches a value divisible by 7, which would be 21 in this case!
+			console.log(current); // Output the variable, which should be 21!
+
+			/* Now update variables in C style. I'm not actually going to place the code in, but it will show the different styles:
+				counter = counter + 1;
+				counter += 1; << Does the same thing above, but shorthamded
+				counter = counter - 1;
+				counter -= 1;
+				counter++, counter-- << Increment or decrement by 1 */
+
+			// Now lastly, perform a switch case. You know the way it works already. Javascript is extremely similar to C/C++
+			switch(prompt("How is the weather? (lowercase only)")) {
+				case "rainy":
+					console.log("Bring an umbrella");
+					// Don't forget to break each case!
+					break;
+				case "sunny":
+					console.log("Dress lightly");
+					/* Notice theres no break here! Thats to share code between two cases. In this case,
+					   it will recommend dressing lightly and going outside */
+				case "cloudy":
+					console.log("Go outside!");
+					break;
+				default:
+					console.log("Unknown weather type!");
+					break;
+			}
+		</script>
+	</body>
+</html>
